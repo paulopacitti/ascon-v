@@ -5,6 +5,7 @@
 *.o
 *.obj
 *.elf
+*.dSYM
 test
 
 # TeX
