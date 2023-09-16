@@ -9,12 +9,18 @@ BUILD=build
 
 all: $(BUILD) test
 
-test: tests/aead_test.c $(BUILD)/asconv.o 
+cross-compile: CC = $(CC-CROSS-COMPILER)
+cross-compile: $(BUILD) test
+
+test: tests/aead_test.c $(BUILD)/asconv.o $(BUILD)/Unity.o
 	$(CC) $^ -g -o $(BUILD)/test
 	./$(BUILD)/test
 
 $(BUILD)/asconv.o: src/asconv.c src/asconv.h $(BUILD)
 	$(CC) -c src/asconv.c -o $(BUILD)/asconv.o
+
+$(BUILD)/Unity.o: $(BUILD)
+	$(CC) -c lib/Unity/unity.c -o $(BUILD)/Unity.o
 
 $(BUILD):
 	mkdir -p build
