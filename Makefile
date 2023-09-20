@@ -1,20 +1,16 @@
+# when cross-compiling, set the proper RISC-V compiler in CC
+
 CC=gcc
 ifeq ($(shell uname -s), Darwin)
 CC=clang
 endif
-
-CC-CROSS-COMPILER=riscv64-unknown-elf-gcc
 TESTS=tests
 BUILD=build
 
 all: $(BUILD) test
 
-cross-compile: CC = $(CC-CROSS-COMPILER)
-cross-compile: $(BUILD) test
-
 test: tests/aead_test.c $(BUILD)/asconv.o $(BUILD)/Unity.o
-	$(CC) $^ -g -o $(BUILD)/test
-	./$(BUILD)/test
+	$(CC) $^ -Wall -g -o $(BUILD)/test
 
 $(BUILD)/asconv.o: src/asconv.c src/asconv.h $(BUILD)
 	$(CC) -c src/asconv.c -o $(BUILD)/asconv.o
