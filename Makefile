@@ -6,11 +6,18 @@ CC=clang
 endif
 TESTS=tests
 BUILD=build
+CFLAGS=-Wall
 
-all: $(BUILD) test
+all: benchmark test
 
 test: tests/aead_test.c $(BUILD)/asconv.o $(BUILD)/Unity.o
 	$(CC) $^ -Wall -g -o $(BUILD)/test
+
+benchmark: benchmark/benchmark.c $(BUILD)/ref.o
+	$(CC) $^ $(CFLAGS) -o $(BUILD)/benchmark
+
+$(BUILD)/ref.o: $(BUILD) ref/aead.c
+	$(CC) -c ref/aead.c -o $(BUILD)/ref.o
 
 $(BUILD)/asconv.o: src/asconv.c src/asconv.h $(BUILD)
 	$(CC) -c src/asconv.c -o $(BUILD)/asconv.o
