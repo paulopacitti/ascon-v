@@ -2,9 +2,17 @@
 #include "../src/asconv.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
-const int ITERATIONS = 128;
+const int ITERATIONS = 512;
+const int RESOLUTION = 45;   // 45 ns on T-Head C906;
+const double NS = 0.000000001;
+const unsigned long long FREQUENCY = 1000000000;
+
+static inline uint64_t rdtime() {
+    uint64_t cycle;
+    asm volatile("rdtime %0" : "=r"(cycle));
+    return cycle;
+}
 
 void init_buffer(unsigned char *buffer, unsigned long long numbytes) {
     unsigned long long i;
@@ -12,19 +20,20 @@ void init_buffer(unsigned char *buffer, unsigned long long numbytes) {
         buffer[i] = (unsigned char) i;
 }
 
-int average_clock_count(unsigned long *clock_counts, int num_clocks) {
+unsigned long long average_time_elapsed(unsigned long long *time_counts,
+                                        int len) {
     unsigned long long sum = 0;
-    for (int i = 0; i < num_clocks; i++) {
-        sum += clock_counts[i];
+    for (int i = 0; i < len; i++) {
+        sum += time_counts[i];
     }
-    return sum / num_clocks;
+    return (sum / len) * RESOLUTION;
 }
 
 int main() {
-    unsigned long ref_clock_start;
-    unsigned long ref_clock_end;
-    int avg_clock_count;
-    unsigned long clock_counts[ITERATIONS];
+    unsigned long long ref_timer_start;
+    unsigned long long ref_timer_end;
+    unsigned long long avg_time_count;
+    unsigned long long time_counts[ITERATIONS];
 
     unsigned char key[128];
     unsigned char nonce[128];
@@ -44,17 +53,32 @@ int main() {
     init_buffer(nonce, sizeof(nonce));
 
     for (int i = 0; i < ITERATIONS; i++) {
-        ref_clock_start = clock();
+        ref_timer_start = rdtime();
         result |= crypto_aead_encrypt(ct, &clen, msg, mlen, ad, adlen,
                                       (void *) 0, nonce, key);
-        ref_clock_end = clock();
-        clock_counts[i] = ref_clock_end - ref_clock_start;
+        ref_timer_end = rdtime();
+        time_counts[i] = ref_timer_end - ref_timer_start;
     }
 
-    avg_clock_count = average_clock_count(clock_counts, ITERATIONS);
+    avg_time_count = average_time_elapsed(time_counts, ITERATIONS);
     printf("======= REFERENCE IMPLEMENTATION =======\n");
     printf("ascon128v12 encrypt():\n");
-    printf("    clock cycles: %d\n", avg_clock_count);
-    printf("    time: %.8lf\n", (double) avg_clock_count / CLOCKS_PER_SEC);
+    printf("    clock cycles: %d\n",
+           (unsigned int) (((avg_time_count * NS) / 60) * FREQUENCY));
+    printf("    time: %.9f\n", avg_time_count * NS);
+
+    for (int i = 0; i < ITERATIONS; i++) {
+        ref_timer_start = rdtime();
+        result |= ascon128_encrypt(ct, &clen, msg, mlen, ad, adlen, key, nonce);
+        ref_timer_end = rdtime();
+        time_counts[i] = ref_timer_end - ref_timer_start;
+    }
+
+    avg_time_count = average_time_elapsed(time_counts, ITERATIONS);
+    printf("======= ASCON-V IMPLEMENTATION =======\n");
+    printf("ascon128v12 encrypt():\n");
+    printf("    clock cycles: %d\n",
+           (unsigned int) (((avg_time_count * NS) / 60) * FREQUENCY));
+    printf("    time: %.9f\n", avg_time_count * NS);
     return 0;
 }

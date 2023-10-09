@@ -34,6 +34,7 @@ typedef struct {
     uint64_t x[5];
 } ascon_state_t;
 
+uint8_t GETBYTE(uint64_t x, uint8_t i);
 uint64_t SETBYTE(const uint8_t b, int i);
 uint64_t ROR(uint64_t x, int n);
 void ROUND(ascon_state_t *s, uint8_t C);
@@ -43,4 +44,4 @@ void P12(ascon_state_t *s);
 int ascon128_encrypt(unsigned char *c, unsigned long long *clen,
                      const unsigned char *m, unsigned long long mlen,
                      const unsigned char *ad, unsigned long long adlen,
-                     const unsigned char *k);
+                     const unsigned char *k, const unsigned char *n);
