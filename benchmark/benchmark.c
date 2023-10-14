@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-const int ITERATIONS = 512;
+const int ITERATIONS = 1024;
 const int RESOLUTION = 45;   // 45 ns on T-Head C906;
 const double NS = 0.000000001;
 const unsigned long long FREQUENCY = 1000000000;
