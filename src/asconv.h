@@ -15,6 +15,9 @@
      ((uint64_t) (ASCON_128_PA_ROUNDS) << 40) |                                \
      ((uint64_t) (ASCON_128_PB_ROUNDS) << 32))
 
+#define CRYPTO_NPUBBYTES 16
+#define CRYPTO_ABYTES    16
+
 #define RC0 0xf0
 #define RC1 0xe1
 #define RC2 0xd2
@@ -43,5 +46,10 @@ void P12(ascon_state_t *s);
 
 int ascon128_encrypt(unsigned char *c, unsigned long long *clen,
                      const unsigned char *m, unsigned long long mlen,
+                     const unsigned char *ad, unsigned long long adlen,
+                     const unsigned char *k, const unsigned char *n);
+
+int ascon128_decrypt(unsigned char *m, unsigned long long *mlen,
+                     const unsigned char *c, unsigned long long clen,
                      const unsigned char *ad, unsigned long long adlen,
                      const unsigned char *k, const unsigned char *n);
