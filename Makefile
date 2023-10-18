@@ -6,12 +6,12 @@ CC=clang
 endif
 TESTS=tests
 BUILD=build
-CFLAGS=-Wall -O2
+CFLAGS=-Wall -g
 
 all: benchmark test
 
-test: tests/aead_test.c $(BUILD)/asconv.o $(BUILD)/Unity.o
-	$(CC) $^ $(CFLAGS) -g -o $(BUILD)/test
+test: tests/aead_test.c $(BUILD)/asconv.o $(BUILD)/ref.o $(BUILD)/Unity.o
+	$(CC) $^ $(CFLAGS) -o $(BUILD)/test
 
 benchmark: benchmark/benchmark.c $(BUILD)/ref.o $(BUILD)/asconv.o
 	$(CC) $^ $(CFLAGS) -o $(BUILD)/benchmark

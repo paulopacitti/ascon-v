@@ -1,6 +1,4 @@
 #include "asconv.h"
-#include <_types/_uint64_t.h>
-#include <stdint.h>
 
 uint8_t GETBYTE(uint64_t x, uint8_t i) {
     return (uint8_t) ((uint64_t) (x) >> (56 - 8 * (i)));
@@ -108,11 +106,11 @@ int ascon128_encrypt(unsigned char *c, unsigned long long *clen,
             ad += ASCON_128_RATE;
             adlen -= ASCON_128_RATE;
         }
+        s.x[0] ^= LOADBYTES(ad, ASCON_128_RATE);
+        s.x[0] ^= SETBYTE(0x80, adlen);   // remaining padding bytes
+        P6(&s);
     }
 
-    s.x[0] ^= LOADBYTES(ad, ASCON_128_RATE);
-    s.x[0] ^= SETBYTE(0x80, adlen);   // remaining padding bytes
-    P6(&s);
     s.x[4] ^= 1;   // padding
 
     /* process plain text */

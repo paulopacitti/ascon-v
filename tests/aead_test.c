@@ -1,7 +1,15 @@
 #include "../lib/Unity/unity.h"
+#include "../ref/crypto_aead.h"
 #include "../src/asconv.h"
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+void init_buffer(unsigned char *buffer, unsigned long long numbytes) {
+    unsigned long long i;
+    for (i = 0; i < numbytes; i++)
+        buffer[i] = (unsigned char) i;
+}
 
 void printstate(ascon_state_t s) {
     TEST_PRINTF("\n");
@@ -79,6 +87,44 @@ void test_P12_ShouldPermutateBits() {
     TEST_ASSERT_EQUAL_HEX64(0xE8F664254036C3C7, s.x[4]);
 }
 
+void test_ascon128_encrypt() {
+
+    unsigned char key[] = "0123456789abcedef";
+    unsigned char nonce[] = "0123456789abcedef";
+    const unsigned char msg[] = "0123456789abcedef";
+    const unsigned char ad[] = "0123456789abcedef";
+    unsigned long long mlen = sizeof(msg);
+    unsigned long long adlen = sizeof(ad);
+    unsigned char *ct_ref;
+    unsigned char *ct_asconv;
+    unsigned long long *clen_ref;
+    unsigned long long *clen_asconv;
+
+    ct_ref = malloc(mlen + adlen);
+    clen_ref = malloc(sizeof(unsigned long long));
+    ct_asconv = malloc(mlen + adlen);
+    clen_asconv = malloc(sizeof(unsigned long long));
+
+    init_buffer(key, sizeof(key));
+    init_buffer(nonce, sizeof(nonce));
+
+    int encrypted_ref_result = crypto_aead_encrypt(ct_ref, clen_ref, msg, mlen,
+                                                   ad, adlen, NULL, nonce, key);
+
+    int encrypted_asconv_result = ascon128_encrypt(ct_asconv, clen_asconv, msg,
+                                                   mlen, ad, adlen, key, nonce);
+
+    TEST_PRINTF("{ clen_ref: %d, clen_asconv: %d }", *clen_ref, *clen_asconv);
+    TEST_ASSERT_EQUAL_INT(0, encrypted_ref_result);
+    TEST_ASSERT_EQUAL_INT(0, encrypted_asconv_result);
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(ct_ref, ct_asconv, *clen_ref);
+
+    free(ct_ref);
+    free(ct_asconv);
+    free(clen_ref);
+    free(clen_asconv);
+}
+
 int main() {
     UNITY_BEGIN();
     RUN_TEST(test_SETBYTE_ShouldSetByte);
@@ -86,5 +132,6 @@ int main() {
     RUN_TEST(test_ROUND_ShouldPermutateBits);
     RUN_TEST(test_P6_ShouldPermutateBits);
     RUN_TEST(test_P12_ShouldPermutateBits);
+    RUN_TEST(test_ascon128_encrypt);
     return UNITY_END();
 }
