@@ -178,9 +178,15 @@ int ascon128_decrypt(unsigned char *m, unsigned long long *mlen,
             ad += ASCON_128_RATE;
             adlen -= ASCON_128_RATE;
         }
+        /* final associated data block */
+        s.x[0] ^= LOADBYTES(ad, adlen);
+        s.x[0] ^= SETBYTE(0x80, adlen);
+        P6(&s);
     }
+    s.x[4] ^= 1;
 
     /* process ciphertext */
+    clen -= CRYPTO_ABYTES;
     while (clen >= ASCON_128_RATE) {
         ci = LOADBYTES(c, ASCON_128_RATE);
         s.x[0] ^= ci;
@@ -196,9 +202,9 @@ int ascon128_decrypt(unsigned char *m, unsigned long long *mlen,
     STOREBYTES(m, s.x[0] ^ ci, clen);
     c += clen;
 
-    uint64_t r =
-        (s.x[0] ^ ci) & (0xFFFFFFFFFFFFFFFF << (8 * (ASCON_128_RATE - clen)));
-    r |= SETBYTE(0x80, ASCON_128_RATE - clen);   // remaining padding bytes
+    uint64_t r = (s.x[0] ^ ci) >> ((ASCON_128_RATE - clen) * 8)
+                                      << ((ASCON_128_RATE - clen) * 8) |
+                 SETBYTE(0x80, clen);
     s.x[0] ^= r;
 
     /* finalization */

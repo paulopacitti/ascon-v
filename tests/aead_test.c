@@ -4,6 +4,17 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+unsigned char *ciphertext;
+unsigned long long clen;
+
+const unsigned char key[] = "0123456789abcedef";
+const unsigned char nonce[] = "0123456789abcedef";
+const unsigned char msg[] = "0123456789abcedef";
+const unsigned char ad[] = "0123456789abcedef";
+unsigned long long mlen = sizeof(msg);
+unsigned long long adlen = sizeof(ad);
 
 void init_buffer(unsigned char *buffer, unsigned long long numbytes) {
     unsigned long long i;
@@ -88,13 +99,6 @@ void test_P12_ShouldPermutateBits() {
 }
 
 void test_ascon128_encrypt() {
-
-    unsigned char key[] = "0123456789abcedef";
-    unsigned char nonce[] = "0123456789abcedef";
-    const unsigned char msg[] = "0123456789abcedef";
-    const unsigned char ad[] = "0123456789abcedef";
-    unsigned long long mlen = sizeof(msg);
-    unsigned long long adlen = sizeof(ad);
     unsigned char *ct_ref;
     unsigned char *ct_asconv;
     unsigned long long *clen_ref;
@@ -105,24 +109,56 @@ void test_ascon128_encrypt() {
     ct_asconv = malloc(mlen + adlen);
     clen_asconv = malloc(sizeof(unsigned long long));
 
-    init_buffer(key, sizeof(key));
-    init_buffer(nonce, sizeof(nonce));
-
     int encrypted_ref_result = crypto_aead_encrypt(ct_ref, clen_ref, msg, mlen,
                                                    ad, adlen, NULL, nonce, key);
 
     int encrypted_asconv_result = ascon128_encrypt(ct_asconv, clen_asconv, msg,
                                                    mlen, ad, adlen, key, nonce);
 
-    TEST_PRINTF("{ clen_ref: %d, clen_asconv: %d }", *clen_ref, *clen_asconv);
     TEST_ASSERT_EQUAL_INT(0, encrypted_ref_result);
     TEST_ASSERT_EQUAL_INT(0, encrypted_asconv_result);
+    TEST_ASSERT_EQUAL_UINT64(*clen_ref, *clen_asconv);
     TEST_ASSERT_EQUAL_UINT8_ARRAY(ct_ref, ct_asconv, *clen_ref);
+
+    /* malloc and copy cyphertext to global variable */
+    ciphertext = malloc(*clen_asconv);
+    memcpy(ciphertext, ct_asconv, *clen_asconv);
+    clen = *clen_asconv;
 
     free(ct_ref);
     free(ct_asconv);
     free(clen_ref);
     free(clen_asconv);
+}
+
+void test_ascon128_decrypt() {
+
+    unsigned char *msg_ref;
+    unsigned char *msg_asconv;
+    unsigned long long *mlen_ref;
+    unsigned long long *mlen_asconv;
+
+    msg_ref = malloc(mlen + adlen);
+    msg_asconv = malloc(mlen + adlen);
+    mlen_ref = malloc(sizeof(unsigned long long));
+    mlen_asconv = malloc(sizeof(unsigned long long));
+
+    int decryption_ref_result = crypto_aead_decrypt(
+        msg_ref, mlen_ref, NULL, ciphertext, clen, ad, adlen, nonce, key);
+
+    int decryption_asconv_result = ascon128_decrypt(
+        msg_asconv, mlen_asconv, ciphertext, clen, ad, adlen, key, nonce);
+
+    TEST_ASSERT_EQUAL_INT(0, decryption_ref_result);
+    TEST_ASSERT_EQUAL_INT(0, decryption_asconv_result);
+    TEST_ASSERT_EQUAL_UINT64(*mlen_ref, *mlen_asconv);
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(msg_ref, msg_asconv, *mlen_asconv);
+    TEST_ASSERT_EQUAL_STRING(msg, msg_asconv);
+
+    free(msg_ref);
+    free(msg_asconv);
+    free(mlen_ref);
+    free(mlen_asconv);
 }
 
 int main() {
@@ -133,5 +169,7 @@ int main() {
     RUN_TEST(test_P6_ShouldPermutateBits);
     RUN_TEST(test_P12_ShouldPermutateBits);
     RUN_TEST(test_ascon128_encrypt);
+    RUN_TEST(test_ascon128_decrypt);
+
     return UNITY_END();
 }
