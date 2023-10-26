@@ -3,12 +3,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define REFERENCE_IMPLEMENTATION 0
+#define ASCONV_IMPLEMENTATION    1
+
 const int ITERATIONS = 2000;
 const int RESOLUTION = 45;   // 45 ns on T-Head C906;
 const double NS = 0.000000001;
 const unsigned long long FREQUENCY = 1000000000;
-const unsigned char REFERENCE_IMPLEMENTATION = 0;
-const unsigned char ASCONV_IMPLEMENTATION = 1;
 
 unsigned char key[16];
 unsigned char nonce[16];
@@ -63,7 +64,7 @@ void benchmark_init(unsigned long long message_length,
     init_buffer(ad, adlen);
 }
 
-void benchmark_encryption(unsigned char method, unsigned long long *time,
+void benchmark_encryption(int method, unsigned long long *time,
                           unsigned int *cycles) {
     unsigned long long ref_timer_start;
     unsigned long long ref_timer_end;
@@ -100,7 +101,7 @@ void benchmark_encryption(unsigned char method, unsigned long long *time,
     }
 }
 
-void benchmark_decryption(unsigned char method, unsigned long long *time,
+void benchmark_decryption(int method, unsigned long long *time,
                           unsigned int *cycles) {
     unsigned long long ref_timer_start;
     unsigned long long ref_timer_end;
@@ -137,7 +138,7 @@ void benchmark_decryption(unsigned char method, unsigned long long *time,
 }
 
 int main() {
-    int message_sizes[4] = {8, 32, 64, 1024};
+    int message_sizes[4] = {8, 32, 64, 1000};
     unsigned long long encryption_ref_time_ns[4];
     unsigned int encryption_ref_cycles[4];
     unsigned long long encryption_asconv_time_ns[4];
