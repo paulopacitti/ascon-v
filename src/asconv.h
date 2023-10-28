@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <string.h>
 
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
@@ -30,6 +31,16 @@
 #define RCa 0x5a
 #define RCb 0x4b
 
+#define U64BIGENDIAN(x)                                                        \
+    (((0x00000000000000FFULL & (x)) << 56) |                                   \
+     ((0x000000000000FF00ULL & (x)) << 40) |                                   \
+     ((0x0000000000FF0000ULL & (x)) << 24) |                                   \
+     ((0x00000000FF000000ULL & (x)) << 8) |                                    \
+     ((0x000000FF00000000ULL & (x)) >> 8) |                                    \
+     ((0x0000FF0000000000ULL & (x)) >> 24) |                                   \
+     ((0x00FF000000000000ULL & (x)) >> 40) |                                   \
+     ((0xFF00000000000000ULL & (x)) >> 56))
+
 #endif
 
 typedef struct {
@@ -37,14 +48,14 @@ typedef struct {
 } ascon_state_t;
 
 /* function declarations */
-static inline uint8_t GETBYTE(uint64_t x, uint8_t i);
 static inline uint64_t LOADBYTES(const uint8_t *bytes, uint8_t n);
-static inline uint64_t ROR(uint64_t x, int n);
-static inline uint64_t SETBYTE(const uint8_t b, int i);
-static inline void STOREBYTES(uint8_t *bytes, uint64_t x, int n);
-static inline void ROUND(ascon_state_t *s, uint8_t C);
 static inline void P6(ascon_state_t *s);
 static inline void P12(ascon_state_t *s);
+static inline uint64_t PAD(int i);
+static inline uint64_t ROR(uint64_t x, int n);
+static inline void ROUND(ascon_state_t *s, uint8_t C);
+static inline void STOREBYTES(uint8_t *bytes, uint64_t x, int n);
+static inline uint64_t U64_SWITCH_ENDIANESS(uint64_t x);
 int ascon128_encrypt(unsigned char *c, unsigned long long *clen,
                      const unsigned char *m, unsigned long long mlen,
                      const unsigned char *ad, unsigned long long adlen,
@@ -56,16 +67,10 @@ int ascon128_decrypt(unsigned char *m, unsigned long long *mlen,
                      const unsigned char *k, const unsigned char *n);
 
 /* inline implementations */
-static inline uint8_t GETBYTE(uint64_t x, uint8_t i) {
-    return (uint8_t) ((uint64_t) (x) >> (56 - 8 * (i)));
-}
-
 static inline uint64_t LOADBYTES(const uint8_t *bytes, uint8_t n) {
-    int i;   // max key lenght is 128 bits
     uint64_t x = 0;
-    for (i = 0; i < n; ++i)
-        x |= SETBYTE(bytes[i], i);
-    return x;
+    memcpy(&x, bytes, n);
+    return U64_SWITCH_ENDIANESS(x);   // to big endian
 }
 
 static inline void P6(ascon_state_t *s) {
@@ -121,13 +126,23 @@ static inline void ROUND(ascon_state_t *s, const uint8_t C) {
     s->x[4] = t.x[4] ^ ROR(t.x[4], 7) ^ ROR(t.x[4], 41);
 }
 
-static inline uint64_t SETBYTE(const uint8_t b, int i) {
-    return ((uint64_t) (b) << (56 - 8 * (i)));
+static inline uint64_t PAD(int i) {
+    return ((uint64_t) (0x80) << (56 - 8 * (i)));
 }
 
 /* store bytes from 64-bit Ascon word */
 static inline void STOREBYTES(uint8_t *bytes, uint64_t x, int n) {
-    int i;
-    for (i = 0; i < n; ++i)
-        bytes[i] = GETBYTE(x, i);
+    uint64_t x_big_endian = U64_SWITCH_ENDIANESS(x);   // to big endian
+    memcpy(bytes, &x_big_endian, n);
+}
+
+static inline uint64_t U64_SWITCH_ENDIANESS(uint64_t x) {
+    return (((0x00000000000000FFULL & (x)) << 56) |
+            ((0x000000000000FF00ULL & (x)) << 40) |
+            ((0x0000000000FF0000ULL & (x)) << 24) |
+            ((0x00000000FF000000ULL & (x)) << 8) |
+            ((0x000000FF00000000ULL & (x)) >> 8) |
+            ((0x0000FF0000000000ULL & (x)) >> 24) |
+            ((0x00FF000000000000ULL & (x)) >> 40) |
+            ((0xFF00000000000000ULL & (x)) >> 56));
 }

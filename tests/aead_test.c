@@ -37,13 +37,6 @@ void setUp() {}
 
 void tearDown() {}
 
-void test_SETBYTE_ShouldSetByte() {
-    uint64_t x = 0x0;
-    x |= SETBYTE(0x12, 0);
-    x |= SETBYTE(0x12, 7);
-    TEST_ASSERT_EQUAL_HEX64(0x1200000000000012, x);
-}
-
 void test_ROR_ShouldRotateBits() {
     const uint64_t x = 0x0123456789abcdef;
     const uint64_t y = ROR(x, 1);
@@ -163,7 +156,6 @@ void test_ascon128_decrypt() {
 
 int main() {
     UNITY_BEGIN();
-    RUN_TEST(test_SETBYTE_ShouldSetByte);
     RUN_TEST(test_ROR_ShouldRotateBits);
     RUN_TEST(test_ROUND_ShouldPermutateBits);
     RUN_TEST(test_P6_ShouldPermutateBits);
