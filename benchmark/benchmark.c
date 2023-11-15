@@ -254,27 +254,32 @@ int main() {
 
     /* Speedup results */
     printf("Speedup results (with a message size of 4MB):\n");
-    printf("%-20s%-30s%-30s%-30s%-30s\n", "[Implementation]",
-           "[Encryption (clock cycles)]", "[Decryption (clock cycles)]",
-           "[Encryption relative speed]", "[Decryption relative speed]");
-    printf("%-20s%-30d%-30d%-30.2f%-30.2f\n", "reference",
+    printf("___________________________________________________________________"
+           "__________________________________\n");
+
+    printf("%-20s%-20s%-20s%-20s%-20s\n", "[Implementation]",
+           "[Encrypt (cycles)]", "[Decrypt (cycles)]", "[Encrypt (speed)]",
+           "[Decrypt (speed)]");
+    printf("%-20s%-20d%-20d%-20.2f%-20.2f\n", "reference",
            encryption_ref_cycles[4], decryption_ref_cycles[4],
            (float) ((float) encryption_ref_cycles[4] /
                     (float) encryption_ref_cycles[4]),
            (float) ((float) decryption_ref_cycles[4] /
                     (float) decryption_ref_cycles[4]));
-    printf("%-20s%-30d%-30d%-30.2f%-30.2f\n", "opt64",
+    printf("%-20s%-20d%-20d%-20.2f%-20.2f\n", "opt64",
            encryption_opt64_cycles[4], decryption_opt64_cycles[4],
            (float) ((float) encryption_ref_cycles[4] /
                     (float) encryption_opt64_cycles[4]),
            (float) ((float) decryption_ref_cycles[4] /
                     (float) decryption_opt64_cycles[4]));
-    printf("%-20s%-30d%-30d%-30.2f%-30.2f\n", "asconv",
+    printf("%-20s%-20d%-20d%-20.2f%-20.2f\n", "asconv",
            encryption_asconv_cycles[4], decryption_asconv_cycles[4],
            (float) ((float) encryption_ref_cycles[4] /
                     (float) encryption_asconv_cycles[4]),
            (float) ((float) decryption_ref_cycles[4] /
                     (float) decryption_asconv_cycles[4]));
+    printf("___________________________________________________________________"
+           "__________________________________\n");
 
     free(ct);
     free(ad);
