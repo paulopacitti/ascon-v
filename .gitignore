@@ -21,6 +21,7 @@ build
 *.cb
 *.cb2
 .*.lb
+tex/assets/asconfigures/
 
 *.fdb_latexmk
 *.synctex

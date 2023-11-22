@@ -1,0 +1,366 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global}
+    \entry{Fujii2017a}{inproceedings}{}
+      \name{author}{2}{}{%
+        {{hash=63d8fb7d34b18e42f586d3197ae3b5f4}{%
+           family={Fujii},
+           familyi={F\bibinitperiod},
+           given={H.},
+           giveni={H\bibinitperiod}}}%
+        {{hash=3b2b75edfc694cff86220ef6680a0f47}{%
+           family={Aranha},
+           familyi={A\bibinitperiod},
+           given={D.\bibnamedelimi F.},
+           giveni={D\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \strng{namehash}{565058d5333029452cf77f125a98d237}
+      \strng{fullhash}{565058d5333029452cf77f125a98d237}
+      \strng{bibnamehash}{565058d5333029452cf77f125a98d237}
+      \strng{authorbibnamehash}{565058d5333029452cf77f125a98d237}
+      \strng{authornamehash}{565058d5333029452cf77f125a98d237}
+      \strng{authorfullhash}{565058d5333029452cf77f125a98d237}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Latincrypt 2017}
+      \field{month}{6}
+      \field{title}{Curve25519 for the Cortex-M4 and beyond}
+      \field{year}{2017}
+      \verb{urlraw}
+      \verb http://www.cs.haifa.ac.il/~orrd/LC17/paper39.pdf
+      \endverb
+      \verb{url}
+      \verb http://www.cs.haifa.ac.il/~orrd/LC17/paper39.pdf
+      \endverb
+    \endentry
+    \entry{turan2023status}{article}{}
+      \name{author}{8}{}{%
+        {{hash=40ab9e8b5d4bf8ffd9165dbaa7667d93}{%
+           family={Turan},
+           familyi={T\bibinitperiod},
+           given={Meltem\bibnamedelima Sönmez},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=3fa907b2a74504abc9f259d8f336a2a0}{%
+           family={McKay},
+           familyi={M\bibinitperiod},
+           given={Kerry},
+           giveni={K\bibinitperiod}}}%
+        {{hash=fe325de5d876ba150839cbbb697df9da}{%
+           family={Chang},
+           familyi={C\bibinitperiod},
+           given={Donghoon},
+           giveni={D\bibinitperiod}}}%
+        {{hash=ddda76aa96553e3d4c700fdf3c6b9132}{%
+           family={Bassham},
+           familyi={B\bibinitperiod},
+           given={Lawrence\bibnamedelima E},
+           giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=c4dda01c2b0a49efc64a9ab54e118f55}{%
+           family={Kang},
+           familyi={K\bibinitperiod},
+           given={Jinkeon},
+           giveni={J\bibinitperiod}}}%
+        {{hash=bbd01051acf0d85ce65e60ee5b0d9cf6}{%
+           family={Waller},
+           familyi={W\bibinitperiod},
+           given={Noah\bibnamedelima D},
+           giveni={N\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=49fafe3b1ae0ecce198dd52396dbe500}{%
+           family={Kelsey},
+           familyi={K\bibinitperiod},
+           given={John\bibnamedelima M},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=14c0b953ebe48048e6987df32351d704}{%
+           family={Hong},
+           familyi={H\bibinitperiod},
+           given={Deukjo},
+           giveni={D\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Meltem Sonmez Turan, Kerry McKay, Donghoon Chang, Jinkeon Kang, Noah Waller}%
+      }
+      \strng{namehash}{b550c2e7081ab845ce6ba3ca5620a063}
+      \strng{fullhash}{c847cca4b29a3e317e68fa3ff4e00648}
+      \strng{bibnamehash}{b550c2e7081ab845ce6ba3ca5620a063}
+      \strng{authorbibnamehash}{b550c2e7081ab845ce6ba3ca5620a063}
+      \strng{authornamehash}{b550c2e7081ab845ce6ba3ca5620a063}
+      \strng{authorfullhash}{c847cca4b29a3e317e68fa3ff4e00648}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Status Report on the Final Round of the NIST Lightweight Cryptography Standardization Process}
+      \field{year}{2023}
+    \endentry
+    \entry{asconv12nist}{misc}{}
+      \name{author}{4}{}{%
+        {{hash=eca64bd23f98b4e78af64e1a24fd3872}{%
+           family={Dobraunig},
+           familyi={D\bibinitperiod},
+           given={Christoph},
+           giveni={C\bibinitperiod}}}%
+        {{hash=3265fb328d4a79028da67f536c0e02d7}{%
+           family={Eichlseder},
+           familyi={E\bibinitperiod},
+           given={Maria},
+           giveni={M\bibinitperiod}}}%
+        {{hash=e320abcdc96582fe2b9956c4e9dd4bc9}{%
+           family={Mendel},
+           familyi={M\bibinitperiod},
+           given={Florian},
+           giveni={F\bibinitperiod}}}%
+        {{hash=3852585e0cbfa37f9a60fa7dafcc4c1c}{%
+           family={Schläffer},
+           familyi={S\bibinitperiod},
+           given={Martin},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{ea7c84971b1613d356530f6a5bf25508}
+      \strng{fullhash}{390477bf8e5fcf89d4e91e5922b0012a}
+      \strng{bibnamehash}{ea7c84971b1613d356530f6a5bf25508}
+      \strng{authorbibnamehash}{ea7c84971b1613d356530f6a5bf25508}
+      \strng{authornamehash}{ea7c84971b1613d356530f6a5bf25508}
+      \strng{authorfullhash}{390477bf8e5fcf89d4e91e5922b0012a}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{Submission to Round 1 of the NIST Lightweight Cryptography project}
+      \field{title}{{Ascon} v1.2}
+      \field{year}{2019}
+      \verb{urlraw}
+      \verb https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/round-1/spec-doc/ascon-spec.pdf
+      \endverb
+      \verb{url}
+      \verb https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/round-1/spec-doc/ascon-spec.pdf
+      \endverb
+    \endentry
+    \entry{asconc2023}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=619edcafdb03a0ba66f80789df135685}{%
+           family={Team},
+           familyi={T\bibinitperiod},
+           given={Ascon},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {GitHub}%
+      }
+      \strng{namehash}{619edcafdb03a0ba66f80789df135685}
+      \strng{fullhash}{619edcafdb03a0ba66f80789df135685}
+      \strng{bibnamehash}{619edcafdb03a0ba66f80789df135685}
+      \strng{authorbibnamehash}{619edcafdb03a0ba66f80789df135685}
+      \strng{authornamehash}{619edcafdb03a0ba66f80789df135685}
+      \strng{authorfullhash}{619edcafdb03a0ba66f80789df135685}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://github.com/ascon/ascon-c}}
+      \field{journaltitle}{GitHub repository}
+      \field{title}{ascon-c: Reference and optimized implementations of Ascon}
+      \field{year}{2023}
+    \endentry
+    \entry{asconv2023}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=8617f23c7cb5a68eac15b876adc3af37}{%
+           family={Pacitti},
+           familyi={P\bibinitperiod},
+           given={Paulo},
+           giveni={P\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {GitHub}%
+      }
+      \strng{namehash}{8617f23c7cb5a68eac15b876adc3af37}
+      \strng{fullhash}{8617f23c7cb5a68eac15b876adc3af37}
+      \strng{bibnamehash}{8617f23c7cb5a68eac15b876adc3af37}
+      \strng{authorbibnamehash}{8617f23c7cb5a68eac15b876adc3af37}
+      \strng{authornamehash}{8617f23c7cb5a68eac15b876adc3af37}
+      \strng{authorfullhash}{8617f23c7cb5a68eac15b876adc3af37}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://github.com/paulopacitti/ascon-v}}
+      \field{journaltitle}{GitHub repository}
+      \field{title}{ascon-v: Ascon lightweight cryptographic algorithm implementation for improved performance on RISC-V}
+      \field{year}{2023}
+    \endentry
+    \entry{bertoni2015keccak}{article}{}
+      \name{author}{4}{}{%
+        {{hash=46f3449cb61b10dc0d9bc713c70f53fe}{%
+           family={Bertoni},
+           familyi={B\bibinitperiod},
+           given={Guido},
+           giveni={G\bibinitperiod}}}%
+        {{hash=ce9c20302c5a545e289c41661ac58c43}{%
+           family={Daemen},
+           familyi={D\bibinitperiod},
+           given={Joan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=55756f80079da828b01c10337ebf63b1}{%
+           family={Peeters},
+           familyi={P\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=c820fe29ffdc882356ec156f1be13b2d}{%
+           family={Van\bibnamedelima Assche},
+           familyi={V\bibinitperiod\bibinitdelim A\bibinitperiod},
+           given={Gilles},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{cef6094df745f1e9e3e80f072440318d}
+      \strng{fullhash}{e4f88604c833f7a1b35f9ed6c04ec83c}
+      \strng{bibnamehash}{cef6094df745f1e9e3e80f072440318d}
+      \strng{authorbibnamehash}{cef6094df745f1e9e3e80f072440318d}
+      \strng{authornamehash}{cef6094df745f1e9e3e80f072440318d}
+      \strng{authorfullhash}{e4f88604c833f7a1b35f9ed6c04ec83c}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Cryptology ePrint Archive}
+      \field{title}{Keccak}
+      \field{year}{2015}
+    \endentry
+    \entry{riscvgnutoolchainv2023}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=1d0727230289450285f41dc3f4deb510}{%
+           family={Collaboration},
+           familyi={C\bibinitperiod},
+           given={RISC-V},
+           giveni={R\bibinithyphendelim V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {GitHub}%
+      }
+      \strng{namehash}{1d0727230289450285f41dc3f4deb510}
+      \strng{fullhash}{1d0727230289450285f41dc3f4deb510}
+      \strng{bibnamehash}{1d0727230289450285f41dc3f4deb510}
+      \strng{authorbibnamehash}{1d0727230289450285f41dc3f4deb510}
+      \strng{authornamehash}{1d0727230289450285f41dc3f4deb510}
+      \strng{authorfullhash}{1d0727230289450285f41dc3f4deb510}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://github.com/riscv-collab/riscv-gnu-toolchain}}
+      \field{journaltitle}{GitHub repository}
+      \field{title}{riscv-gnu-toolchain: GNU toolchain for RISC-V, including GCC}
+      \field{year}{2023}
+    \endentry
+    \entry{jellema2019optimizing}{article}{}
+      \name{author}{1}{}{%
+        {{hash=b91555c866ffabd2c4c88048da12141e}{%
+           family={Jellema},
+           familyi={J\bibinitperiod},
+           given={Lars},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{fullhash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{bibnamehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{authorbibnamehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{authornamehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{authorfullhash}{b91555c866ffabd2c4c88048da12141e}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Bachelor Thesis, Radboud University}
+      \field{title}{Optimizing ascon on RISC-V}
+      \field{year}{2019}
+    \endentry
+    \entry{10179399}{inproceedings}{}
+      \name{author}{4}{}{%
+        {{hash=48461f40361a0e7073551169ea69179d}{%
+           family={Gerlach},
+           familyi={G\bibinitperiod},
+           given={Lukas},
+           giveni={L\bibinitperiod}}}%
+        {{hash=e0ba5e4dbd8efe61426558378e8c3cb0}{%
+           family={Weber},
+           familyi={W\bibinitperiod},
+           given={Daniel},
+           giveni={D\bibinitperiod}}}%
+        {{hash=2e4fe8bcfaa29015f42b50d9865ca58c}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Ruiyi},
+           giveni={R\bibinitperiod}}}%
+        {{hash=463f3d270ca422b7f257c887efd3eed8}{%
+           family={Schwarz},
+           familyi={S\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{9a496bcc19528c1246cbe476a545f119}
+      \strng{fullhash}{b4a8e01915f7d279c23df9f3ee9abd5a}
+      \strng{bibnamehash}{9a496bcc19528c1246cbe476a545f119}
+      \strng{authorbibnamehash}{9a496bcc19528c1246cbe476a545f119}
+      \strng{authornamehash}{9a496bcc19528c1246cbe476a545f119}
+      \strng{authorfullhash}{b4a8e01915f7d279c23df9f3ee9abd5a}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{2023 IEEE Symposium on Security and Privacy (SP)}
+      \field{title}{A Security RISC: Microarchitectural Attacks on Hardware RISC-V CPUs}
+      \field{year}{2023}
+      \field{pages}{2321\bibrangedash 2338}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1109/SP46215.2023.10179399
+      \endverb
+    \endentry
+    \entry{riscvCryptoVol1}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=1b8c54c81f2116dc4d09f1f4f3ef32e5}{%
+           family={Foundation},
+           familyi={F\bibinitperiod},
+           given={RISC-V},
+           giveni={R\bibinithyphendelim V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {GitHub}%
+      }
+      \strng{namehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{fullhash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{bibnamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{authorbibnamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{authornamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{authorfullhash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://github.com/riscv/riscv-crypto/releases/tag/v1.0.1-scalar}}
+      \field{journaltitle}{GitHub repository}
+      \field{title}{RISC-V Cryptography Extensions Volume: Scalar \& Entropy Source Instructions (v1.0.1)}
+      \field{year}{2023}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

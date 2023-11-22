@@ -68,9 +68,9 @@ int ascon128_decrypt(unsigned char *m, unsigned long long *mlen,
 
 /* inline implementations */
 static inline uint64_t LOADBYTES(const uint8_t *bytes, uint8_t n) {
-    uint64_t x = 0;
-    memcpy(&x, bytes, n);
-    return U64_SWITCH_ENDIANESS(x);   // to big endian
+    uint64_t x_little_endian = 0;
+    memcpy(&x_little_endian, bytes, n);
+    return U64_SWITCH_ENDIANESS(x_little_endian);   // to big endian
 }
 
 static inline void P6(ascon_state_t *s) {
@@ -132,8 +132,8 @@ static inline uint64_t PAD(int i) {
 
 /* store bytes from 64-bit Ascon word */
 static inline void STOREBYTES(uint8_t *bytes, uint64_t x, int n) {
-    uint64_t x_big_endian = U64_SWITCH_ENDIANESS(x);   // to big endian
-    memcpy(bytes, &x_big_endian, n);
+    uint64_t x_little_endian = U64_SWITCH_ENDIANESS(x);   // to little endian
+    memcpy(bytes, &x_little_endian, n);
 }
 
 static inline uint64_t U64_SWITCH_ENDIANESS(uint64_t x) {
