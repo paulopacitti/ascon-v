@@ -13,6 +13,8 @@
 
 \usepackage{techrep-ic}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subcaption}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
@@ -21,9 +23,9 @@
   sorting=none
 ]{biblatex}
 \addbibresource{references.bib}
+\usepackage{xcolor}
 \usepackage[hidelinks]{hyperref}
 \usepackage[noabbrev, capitalise]{cleveref}
-
 \usepackage[cache=false]{minted}
 \usemintedstyle{borland}
 
@@ -85,28 +87,62 @@ The approach was to analyze the Ascon algorithm design and 3 different implement
 
 Ascon is a family of algorithms for lighweight cryptography, designed to be used in constrained environments,
 like embedding computing. Designed by cryptographers from Graz University of Technology, Infineon Technologies, Intel Labs, and Radboud University, Ascon has been selected as the new standard for lightweight cryptography in the 2019–2023 NIST Lightweight Cryptography competition. The Ascon family is mainly composed by 4 algorithms: \textsc{Ascon-128}, \textsc{Ascon-128a}, \textsc{Ascon-Hash} and \textsc{Ascon-Hasha}. There's also variants \textsc{Ascon-80pq}, \textsc{Ascon-Xof}, \textsc{Ascon-Xofa}, where the first it's a version of AEAD with an increased key size of 160 bits and the latter two are versions of the hash algorithm but they produce hash outputs of arbitrary
-length, just changing the number of rounds necessary for it.
+length, just changing the number of rounds necessary for it. The \cref{table:1} shows the parameters of the recommended AEAD schemes from the Ascon family of algorithms, where this article will focus on the \textsc{Ascon-128}. The algorithms use the encryption function $\textit{E}_{k,r,a,b}$ and the decryption function $\textit{D}_{k,r,a,b}$ where $k$ is the key size, $r$ is the rate (data block) size, $a$ is the tag size, $b$ is the data block size, and $p^a$ and $p^b$ are the number of rounds used in the many permutations used across the algorithms. The encryption $\textit{E}_{k,r,a,b}(K, A, N, P) = (C, T)$ receives a key $K$, an associated data $A$, a nonce $N$ and a plaintext $P$ and returns a ciphertext $C$ and a tag $T$. The decryption $\textit{D}_{k,r,a,b}(K, A, N, C, T) \in \{P, \perp\}$ receives a key $K$, an associated data $A$, a nonce $N$, a ciphertext $C$ and a tag $T$ and returns the plaintext $P$ if the verification of the tag is correct, otherwise it returns the $\perp$ error.
 
-$$ \textrm{insert table with Ascon parameters} $$
+
+\begin{table}
+  \centering
+  \begin{tabular}{|c|c|cccc|cc|}
+    \hline
+    \textbf{Name}       & \textbf{Algorithms}                     & \textbf{key} & \textbf{nonce} & \textbf{tag} & \textbf{data block} & \textbf{$p^a$} & \textbf{$p^b$} \\ \hline
+    \textsc{Ascon-128}  & \textit{E}, $\textit{D}_{128,64,12,6}$  & 128          & 128            & 128          & 64                  & 12             & 6              \\ \hline
+    \textsc{Ascon-128}a & \textit{E}, $\textit{D}_{128,128,12,8}$ & 128          & 128            & 128          & 128                 & 12             & 8              \\ \hline
+  \end{tabular}
+  \caption{Ascon AEAD parameters}
+  \label{table:1}
+\end{table}
 
 Ascon lightweight properties comes from using the simple bitwise operations that majority of microcontrollers have, like XOR, AND, OR, NOT, and bitwise rotations. The algorithm is based on a sponge construction, which is a cryptographic primitive that can be used to build cryptographic hash functions, pseudorandom functions, and authenticated encryption schemes, like the SHA-3 (also know as "Keccak") \cite{bertoni2015keccak} algorithm. The sponge construct consists in keeping a finite internal state that takes input streams (absorb) to update the state and output streams (squeeze) to produce the output from the internal state, as it's displayed in \cref{fig:1}.
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=.64\textwidth]{assets/aead_encrypt.png}
-  \caption{Sponge construct for AEAD encryption with ASCON.}
+  \includegraphics[scale=0.8]{assets/aead_encrypt.pdf}
+  \caption{Ascon permutation S-box.}
   \label{fig:1}
 \end{figure}
 
-
-
-The Ascon state is composed by 5 64-bit words, alson named as Ascon words, resulting in a 320-bit internal state. This internal state is then manipulated using the Ascon permutation procedure.
-
-
+The Ascon state is composed by 5 64-bit words, also named as Ascon words, resulting in a 320-bit internal state. This internal state is then manipulated using the Ascon permutation procedure.
 
 \subsection{Permutation}
 
-asdasd
+The Ascon permutation is the main building block of the Ascon family of algorithms and consists in 3 stages: round constant addition, a substitution-layer (S-Box) and a linear diffusion layer. It's then used in the AEAD encryption and decryption procedures in the form of $p^a$ and $p^b$, where $p$ is the permutation and $a$ and $b$ are the number of rounds. The parameters $a$ and $b$ is different for each algorithm of the Ascon family, but the permutation is the same for all of them, as it's displayed in \cref{table:1}.
+
+As the Ascon state has 5 64-bit words, the round constant addition consists in XORing the round constant with the second Ascon word. The round constant is a 64-bit value that is different for each round. \color{orange} (add round constants table?) \color{black} The substitution-layer consists in applying a S-Box to the Ascon state. The S-Box is a 5x5 matrix of 64-bit words, where each word is a 5-bit S-Box. The S-Box is applied to each Ascon word, resulting in a new Ascon state as displayed in \cref{fig:2a}. The linear diffusion layer consists in the linear diffusion function $x_i \leftarrow \Sigma_i(x_i)$ applied to each Ascon word $x_i$, where each word has a specific function definition $\Sigma_i(x_i)$. The linear diffusion function definitions are shown in \cref{fig:2b}.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}[b]{0.4\textwidth}
+    \includegraphics[scale=1]{assets/sbox.pdf} \\
+    \caption{Ascon permutation S-box.}
+    \label{fig:2a}
+  \end{subfigure}
+  \hspace*{0.01\textwidth}
+  \begin{subfigure}[B]{0.55\textwidth}
+    \begin{align*}
+       & x_0 \leftarrow \Sigma_{0}(x_0) = x_0 \oplus (x_0 \ggg 19) \oplus (x_0 \ggg 28)          \\
+       & x_1 \leftarrow \Sigma_{1}(x_1) = x_0 \oplus (x_1 \ggg 61) \oplus (x_0 \ggg 39)          \\
+       & x_2 \leftarrow \Sigma_{2}(x_2) = x_2 \oplus (x_2 \ggg \ \, 1) \oplus (x_2 \ggg \ \,  6) \\
+       & x_3 \leftarrow \Sigma_{3}(x_3) = x_3 \oplus (x_3 \ggg 10) \oplus (x_3 \ggg 17)          \\
+       & x_4 \leftarrow \Sigma_{4}(x_4) = x_4 \oplus (x_4 \ggg \ \,  7) \oplus (x_4 \ggg 41)
+    \end{align*}
+    \vspace*{0.07\textwidth}
+    \caption{Ascon linear diffusion layer}
+    \label{fig:2b}
+  \end{subfigure}
+  \caption{S-box and linear diffusion layers in the Ascon permutation.}
+  \label{fig:2}
+\end{figure}
+
 \begin{listing}[ht!]
   \begin{minted}{c}
     // Ascon state with 5 64-bit words.
@@ -163,6 +199,7 @@ output. The Allwinner D1 chip contains a T-Head Xuantie C906 core, a RISC-V
 64-bit 1GHz CPU supporting RV64GC ISA. The board runs Ubuntu Server 23.04,
 running the 6.2.0-36-generic version of the Linux kernel. For compiling the implementation in C, it was used the RISC-V GNU Compiler Collection
 (GCC) version 12.2.0 \cite{riscvgnutoolchainv2023} through cross-compilation with Newlib, using a MacBook Pro with an Apple M1 chip.
+The Ascon permutation S-box translates to what it can be seen in the \cref{lst:1}, as well the round constant addition and linear diffusion stages.
 
 Ascon words, used to mantain the state in the sponge construct, are big endian. The reference implementation merges data to these words by loading and storing bytes using big-endianess, requiring operations to fill the right-side with zeros. However, RISC-V, as like most of other ISAs, is little endian, making bitwise operations slower than it could be if the architecture had the same endianess than the algorithm. It's possible to implement an opmitization considering this issue by handling the data as little-endian in the implementation and reversing the endianess when merging data to the Ascon words \cite{jellema2019optimizing}. This turns out to be way more effective than operating in data in big endinaness since loading bytes and other biwise operations does not need to fill the right-side of the bistring with zeros, as it is in big-endinaness. That way, the cost of reversing the endianess of little-endian 64-bit bistring is lower than the cost of loading data in big-endianess.
 
@@ -175,6 +212,9 @@ Considering $t$ the elapsed time to run encryption/decryption of a plaintext/cip
 \end{equation}
 
 \section{Future}
+
+The Ascon permutation proposed in the specification, shown in \cref{lst:1}, also allows the use of parallelism that could accelerate the performance. Unfortunately, the Allwiner D1 chip does not support vectorial instructions and is single-core only, so the analysis of the use of the vectorial extensions will be left for future work.
+
 As we can see, the RV64GC instructions do not allow great optimizations from the architecture itself since it doesn't have any special instructions to accelerate operations of the Ascon128. However, RISC-V does have instructions extensions in development, and even ratfied, that could improve the performance of Ascon. Such cryptographic specialized instruction extenstions are divided in scalar and vectorial.
 
 The Scalar Cryptography set of extensions (Zbkb, Zbkc, Zbkx, Zknd, Zkne, Zknh, Zksed, Zksh, Zkn, Zks, Zkt, Zk, Zkr) \cite{riscvCryptoVol1} provide instructions that could accelerate operations of the Ascon permutation.
