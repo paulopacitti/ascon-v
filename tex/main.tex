@@ -89,7 +89,6 @@ Ascon is a family of algorithms for lightweight cryptography, designed to be use
 
 The \cref{table:1} shows the parameters of the recommended AEAD schemes from the Ascon family of algorithms, where this article will focus on the \textsc{Ascon-128}. The algorithms use the encryption function $\textit{E}_{k,r,a,b}$ and the decryption function $\textit{D}_{k,r,a,b}$ where $k$ is the key size, $r$ is the rate (data block) size, $a$ and $b$ are the number of rounds used in $p^a$ and $p^b$ permutations used across the algorithms. The encryption $\textit{E}_{k,r,a,b}(K, A, N, P) = (C, T)$ receives a key $K$, an associated data $A$, a nonce $N$ and a plaintext $P$ and returns a ciphertext $C$ and a tag $T$. The decryption $\textit{D}_{k,r,a,b}(K, A, N, C, T) \in \{P, \perp\}$ receives a key $K$, an associated data $A$, a nonce $N$, a ciphertext $C$ and a tag $T$ and returns the plaintext $P$ if the verification of the tag is correct, otherwise it returns the $\perp$ error.
 
-
 \begin{table}
   \centering
   \begin{tabular}{|c|c|cccc|cc|}
@@ -224,11 +223,7 @@ Another minor improvement is done in the finalization of the ciphertext procedur
    & S_r \leftarrow S_r \oplus (\tilde{P_{t}} || 1 || 0^{*}) \label{eq:3}
 \end{align}
 
-The \texttt{ref} and \texttt{opt64} implementations do this operation by cleaning the first (in big-endianess representation) $| \tilde{C_{t}} |$ bytes of $S_r$, then ORing with $\tilde{C_t}$ to load these bytes into $S_r$. Since $S_r \oplus \tilde{P_t} = S_r \oplus  (S_r \oplus \tilde{C_t}) = 0 \oplus \tilde{C_t} = \tilde{C_t}$, $S_r \oplus \tilde{P_t}$ is equivalent to $S_{r} \ |= \tilde{C_t}$, after the first $| \tilde{C_{t}} |$ bytes of $S_r$ are cleared.
-\\
-\\
-
-In \texttt{asconv}, in the purpose of trying to improve the performance, the operations done in \cref{eq:2} and \cref{eq:3} are done with bitwise shift instructions, as it's displayed in \cref{eq:4} and \cref{eq:5}:
+The \texttt{ref} and \texttt{opt64} implementations do this operation by cleaning the first (in big-endianess representation) $| \tilde{C_{t}} |$ bytes of $S_r$, then ORing with $\tilde{C_t}$ to load these bytes into $S_r$. Since $S_r \oplus \tilde{P_t} = S_r \oplus  (S_r \oplus \tilde{C_t}) = 0 \oplus \tilde{C_t} = \tilde{C_t}$, $S_r \oplus \tilde{P_t}$ is equivalent to $S_{r} \ |= \tilde{C_t}$, after the first $| \tilde{C_{t}} |$ bytes of $S_r$ are cleared. In \texttt{asconv}, in the purpose of trying to improve the performance, the operations done in \cref{eq:2} and \cref{eq:3} are done with bitwise shift instructions, as it's displayed in \cref{eq:4} and \cref{eq:5}:
 
 \begin{align}
    & d \leftarrow (S_r \oplus \tilde{C_{t}}) \gg (r - | \tilde{C_{t}}|) \ll (r - | \tilde{C_{t}} |) \ | \ (1|0^*) \label{eq:4} \\
@@ -239,11 +234,61 @@ It was used optimization techniques to improve the performance of the implementa
 
 \section{Results}
 
-Considering $t$ the elapsed time to run encryption/decryption of a plaintext/ciphertext, the resolution $R$ of the timer used to measure the time of the C906 core to be 45 nanoseconds  \cite{10179399}, $F$ the CPU frequency, the number of clock cycles used in encryption/decryption can be calculated \cref{eq:1}:
+Considering $t$ the elapsed time to run encryption/decryption of a plaintext/ciphertext, the resolution $R$ of the timer used to measure the time of the C906 core to be 45 nanoseconds  \cite{10179399}, $F$ the CPU frequency, the number of clock cycles used in encryption/decryption can be calculated \cref{eq:benchmark}:
 
 \begin{equation}
-  C = t \times R \times F \times \frac{10^{9}}{60} \label{eq:1}
+  C = t \times R \times F \times \frac{10^{9}}{60} \label{eq:benchmark}
 \end{equation}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \textbf{Implementation} & \textbf{Message size (B)} &
+    \textbf{Cycles}         & \textbf{Cycles/B}         & \textbf{Time (s)}                   \\ \hline
+
+    \texttt{asconv}         & 8                         & 66                & 9 & 0.000003960 \\ \hline
+
+    \texttt{asconv}         & 32                        & 96                & 3 & 0.000005805 \\ \hline
+
+    \texttt{asconv}         & 64                        & 123               & 1 & 0.000007380 \\ \hline
+  \end{tabular}
+  \caption{Benchmark of \texttt{asconv} implementation of \textsc{Ascon-128} of the encryption operation with different message sizes.}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \textbf{Implementation} & \textbf{Message size (B)} &
+    \textbf{Cycles}         & \textbf{Cycles/B}         & \textbf{Time (s)}                   \\ \hline
+
+    \texttt{asconv}         & 8                         & 60                & 8 & 0.000003960 \\ \hline
+
+    \texttt{asconv}         & 32                        & 83                & 2 & 0.000005805 \\ \hline
+
+    \texttt{asconv}         & 64                        & 120               & 1 & 0.000007380 \\ \hline
+  \end{tabular}
+  \caption{Benchmark of \texttt{asconv} implementation of \textsc{Ascon-128} of the decryption operation with different message sizes.}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \textbf{Implementation} & \textbf{Encrypt cycles} &
+    \textbf{Decrypt cycles} & \textbf{Encrypt speed}  & \textbf{Decrypt speed}               \\ \hline
+
+    \texttt{ref}            & 4533                    & 4603                   & 1.00 & 1.00 \\ \hline
+
+    \texttt{opt64}          & 3912                    & 3917                   & 1.16 & 1.18 \\ \hline
+
+    \texttt{asconv}         & 4078                    & 4093                   & 1.11 & 1.12 \\ \hline
+  \end{tabular}
+  \caption{Comparison and relative speeds of different implementations of \textsc{Ascon-128} when compared with the reference implementation (\texttt{ref}).}
+\end{table}
+
+
 
 \section{Future}
 
