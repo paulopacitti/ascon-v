@@ -51,8 +51,8 @@ unsigned clock_count(unsigned long long time_ns) {
     return (unsigned int) (((time_ns * NS) / 60) * FREQUENCY);
 }
 
-void benchmark_init(unsigned long long message_length,
-                    unsigned long long ad_length) {
+void benchmark_restart(unsigned long long message_length,
+                       unsigned long long ad_length) {
     mlen = message_length;
     adlen = ad_length;
     msg = realloc(msg, mlen * sizeof(unsigned char));
@@ -106,8 +106,7 @@ void benchmark_encryption(int method, unsigned long long *time,
     case ASCONV_IMPLEMENTATION:
         for (int i = 0; i < ITERATIONS; i++) {
             ref_timer_start = rdtime();
-            result |=
-                ascon128_encrypt(ct, &clen, msg, mlen, ad, adlen, key, nonce);
+            ascon128_encrypt(ct, &clen, msg, mlen, ad, adlen, key, nonce);
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
@@ -129,8 +128,8 @@ void benchmark_decryption(int method, unsigned long long *time,
     case REFERENCE_IMPLEMENTATION:
         for (int i = 0; i < ITERATIONS; i++) {
             ref_timer_start = rdtime();
-            result |= crypto_aead_decrypt(decrypted_msg, &decrypted_mlen, NULL,
-                                          ct, clen, ad, adlen, nonce, key);
+            crypto_aead_decrypt(decrypted_msg, &decrypted_mlen, NULL, ct, clen,
+                                ad, adlen, nonce, key);
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
@@ -142,9 +141,8 @@ void benchmark_decryption(int method, unsigned long long *time,
     case OPT64_IMPLEMENTATION:
         for (int i = 0; i < ITERATIONS; i++) {
             ref_timer_start = rdtime();
-            result |=
-                crypto_aead_decrypt_opt64(decrypted_msg, &decrypted_mlen, NULL,
-                                          ct, clen, ad, adlen, nonce, key);
+            crypto_aead_decrypt_opt64(decrypted_msg, &decrypted_mlen, NULL, ct,
+                                      clen, ad, adlen, nonce, key);
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
@@ -156,8 +154,8 @@ void benchmark_decryption(int method, unsigned long long *time,
     case ASCONV_IMPLEMENTATION:
         for (int i = 0; i < ITERATIONS; i++) {
             ref_timer_start = rdtime();
-            result |= ascon128_decrypt(decrypted_msg, &decrypted_mlen, ct, clen,
-                                       ad, adlen, key, nonce);
+            ascon128_decrypt(decrypted_msg, &decrypted_mlen, ct, clen, ad,
+                             adlen, key, nonce);
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
@@ -190,20 +188,25 @@ int main() {
     decrypted_msg = malloc(sizeof(unsigned char));
 
     for (int i = 0; i < 5; i++) {
-        benchmark_init(message_sizes[i], 16);
+        benchmark_restart(message_sizes[i], 16);
         benchmark_encryption(REFERENCE_IMPLEMENTATION,
                              &encryption_ref_time_ns[i],
                              &encryption_ref_cycles[i]);
+        benchmark_restart(message_sizes[i], 16);
         benchmark_encryption(OPT64_IMPLEMENTATION, &encryption_opt64_time_ns[i],
                              &encryption_opt64_cycles[i]);
+        benchmark_restart(message_sizes[i], 16);
         benchmark_encryption(ASCONV_IMPLEMENTATION,
                              &encryption_asconv_time_ns[i],
                              &encryption_asconv_cycles[i]);
+        benchmark_restart(message_sizes[i], 16);
         benchmark_decryption(REFERENCE_IMPLEMENTATION,
                              &decryption_ref_time_ns[i],
                              &decryption_ref_cycles[i]);
+        benchmark_restart(message_sizes[i], 16);
         benchmark_decryption(OPT64_IMPLEMENTATION, &decryption_opt64_time_ns[i],
                              &decryption_opt64_cycles[i]);
+        benchmark_restart(message_sizes[i], 16);
         benchmark_decryption(ASCONV_IMPLEMENTATION,
                              &decryption_asconv_time_ns[i],
                              &decryption_asconv_cycles[i]);
