@@ -351,13 +351,41 @@
       \strng{authorbibnamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
       \strng{authornamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
       \strng{authorfullhash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \field{extraname}{1}
       \field{sortinit}{1}
       \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://github.com/riscv/riscv-crypto/releases/tag/v1.0.1-scalar}}
       \field{journaltitle}{GitHub repository}
-      \field{title}{RISC-V Cryptography Extensions Volume: Scalar \& Entropy Source Instructions (v1.0.1)}
+      \field{title}{RISC-V Cryptography Extensions Volume I: Scalar \& Entropy Source Instructions (v1.0.1)}
+      \field{year}{2023}
+    \endentry
+    \entry{riscvCryptoVol2}{misc}{}
+      \name{author}{1}{}{%
+        {{hash=1b8c54c81f2116dc4d09f1f4f3ef32e5}{%
+           family={Foundation},
+           familyi={F\bibinitperiod},
+           given={RISC-V},
+           giveni={R\bibinithyphendelim V\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {GitHub}%
+      }
+      \strng{namehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{fullhash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{bibnamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{authorbibnamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{authornamehash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \strng{authorfullhash}{1b8c54c81f2116dc4d09f1f4f3ef32e5}
+      \field{extraname}{2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://github.com/riscv/riscv-crypto/releases/tag/v1.0.0}}
+      \field{journaltitle}{GitHub repository}
+      \field{title}{RISC-V Cryptography Extensions Volume II: Vector Instructions (v1.0.0)}
       \field{year}{2023}
     \endentry
   \enddatalist
