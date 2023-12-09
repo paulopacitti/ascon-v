@@ -2364,15 +2364,14 @@
     <bcf:citekey order="1" intorder="1">Fujii2017a</bcf:citekey>
     <bcf:citekey order="2" intorder="1">turan2023status</bcf:citekey>
     <bcf:citekey order="3" intorder="1">asconv12nist</bcf:citekey>
-    <bcf:citekey order="4" intorder="1">jellema2019optimizing</bcf:citekey>
-    <bcf:citekey order="5" intorder="1">asconc2023</bcf:citekey>
-    <bcf:citekey order="6" intorder="1">asconv2023</bcf:citekey>
-    <bcf:citekey order="7" intorder="1">bertoni2015keccak</bcf:citekey>
-    <bcf:citekey order="8" intorder="1">riscvgnutoolchainv2023</bcf:citekey>
-    <bcf:citekey order="9" intorder="1">jellema2019optimizing</bcf:citekey>
-    <bcf:citekey order="10" intorder="1">10179399</bcf:citekey>
-    <bcf:citekey order="11" intorder="1">riscvCryptoVol1</bcf:citekey>
-    <bcf:citekey order="12" intorder="1">riscvCryptoVol2</bcf:citekey>
+    <bcf:citekey order="4" intorder="1">asconc2023</bcf:citekey>
+    <bcf:citekey order="5" intorder="1">asconv2023</bcf:citekey>
+    <bcf:citekey order="6" intorder="1">bertoni2015keccak</bcf:citekey>
+    <bcf:citekey order="7" intorder="1">riscvgnutoolchainv2023</bcf:citekey>
+    <bcf:citekey order="8" intorder="1">jellema2019optimizing</bcf:citekey>
+    <bcf:citekey order="9" intorder="1">10179399</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">riscvCryptoVol1</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">riscvCryptoVol2</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">

@@ -1,34 +1,15 @@
 %% edite este arquivo para refletir os dados do seu relatÃ³rio
-@techreport{TR-IC-PFG-16-01,
-  number      = {IC-PFG-16-01},
-  author      = {Arthur {Goodbeer Jr.} and Charles Opps and Eduardo dos Santos
-                 {Puma Filho}},
-  title       = {{ComparaÃ§Ã£o de Cervejas Brasileiras}},
-  month       = {February},
-  year        = {2008},
+@techreport{TR-IC-PFG-23-41,
+  number      = {IC-PFG-23-41},
+  author      = {Paulo Pacitti and Julio López},
+  title       = {{Lightweight Cryptography with Ascon in riscv64}},
+  month       = {December},
+  year        = {2023},
   institution = {Institute of Computing, University of Campinas},
-  note        = {In English, 14 pages.
-                 \par\selectlanguage{brazil}\textbf{Resumo}
-                 Este  trabalho Ã© um  relatÃ³rio parcial  de um  projeto temÃ¡tico
-                 plurianual, visando  o estudo comparativo  de diversas espÃ©cies
-                 de cervejas nativas do sub-continente brasileiro.  A realizaÃ§Ã£o
-                 deste  trabalho  contou com  o  suporte  financeiro  do CNPq  e
-                 FAPESP,  e foi  imensamente facilitada  pela  infraestrutura de
-                 pesquisa cervisÃ­aca instalada no Campus da UNICAMP.
-                 \par
-                 Com base nessas pesquisas, determinamos que a altura da cerveja
-                 $h$  e  a altura  da  espuma  $e$  satifazem aproximadamente  a
-                 inequaÃ§Ã£o  $(\sqrt{e^2 +  h^2  +  2 h  e})^3  \leq \exp(3  \log
-                 K_0^\ast)$, onde $K_0^\ast$ Ã© a altura do copo.  Esta fÃ³rmula Ã©
-                 vÃ¡lida,    aparentemente,   inclusive   para    espÃ©cies   mais
-                 pigmentadas,  como  {\em  Malzbier}.   Em vista  disso,  e  dos
-                 resultados anÃ¡logos  obtidos por A.  B.  StÃ©mio em experiÃªncias
-                 com {\em GuaranÃ¡} e  $x$-{\em Cola}, conjeturamos que a fÃ³rmula
-                 pode  ser aplicada  (com pequenas  modificaÃ§Ãµes) tambÃ©m  a {\em
-                 Champagne} e outros lÃ­quidos de composiÃ§Ã£o similar.
+  note        = {In English, 8 pages.
                  \par\selectlanguage{english}\textbf{Abstract}
-                 Insert here the abstract in English.
-                 \par\selectlanguage{spanish}\textbf{Resumen}
-                 El resumen del relatÃ³rio en espaÃ±ol.
+                 RISC-V is a promising ISA and soon will be the architecture of
+                 many chips, specially embedded systems. It's necessary to 
+                 guarantee that applications that run in systems designed with RISC-V will be at the same time secure and cryptographically fast. The NIST Lightweight Cryptography competition selected the finalist: Ascon, a family of cryptography algorithms designed to run in devices with low computational power. This research explores the Ascon family of algorithms in the RISC-V 64-bit architecture, analysing the Ascon permutation and the Ascon-128 algorithm, and whether it's possible to optimize it for \texttt{riscv64}, proposing a new technique regarding the decryption implementation. The results show that the proposed optimizations, developed during the limited time given to this research, were not enough to overcome all the implementations that were benchmarked. Finally, it's discussed that new microarchitectures, and, the future of the RISC-V ISA with new instructions extensions recently ratified, could improve the performance of the Ascon family of algorithms and other cryptographic algorithms.
                  }
 }

@@ -155,28 +155,6 @@
       \verb https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/round-1/spec-doc/ascon-spec.pdf
       \endverb
     \endentry
-    \entry{jellema2019optimizing}{article}{}
-      \name{author}{1}{}{%
-        {{hash=b91555c866ffabd2c4c88048da12141e}{%
-           family={Jellema},
-           familyi={J\bibinitperiod},
-           given={Lars},
-           giveni={L\bibinitperiod}}}%
-      }
-      \strng{namehash}{b91555c866ffabd2c4c88048da12141e}
-      \strng{fullhash}{b91555c866ffabd2c4c88048da12141e}
-      \strng{bibnamehash}{b91555c866ffabd2c4c88048da12141e}
-      \strng{authorbibnamehash}{b91555c866ffabd2c4c88048da12141e}
-      \strng{authornamehash}{b91555c866ffabd2c4c88048da12141e}
-      \strng{authorfullhash}{b91555c866ffabd2c4c88048da12141e}
-      \field{sortinit}{4}
-      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
-      \field{labelnamesource}{author}
-      \field{labeltitlesource}{title}
-      \field{journaltitle}{Bachelor Thesis, Radboud University}
-      \field{title}{Optimizing ascon on RISC-V}
-      \field{year}{2019}
-    \endentry
     \entry{asconc2023}{misc}{}
       \name{author}{1}{}{%
         {{hash=619edcafdb03a0ba66f80789df135685}{%
@@ -194,8 +172,8 @@
       \strng{authorbibnamehash}{619edcafdb03a0ba66f80789df135685}
       \strng{authornamehash}{619edcafdb03a0ba66f80789df135685}
       \strng{authorfullhash}{619edcafdb03a0ba66f80789df135685}
-      \field{sortinit}{5}
-      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://github.com/ascon/ascon-c}}
@@ -220,8 +198,8 @@
       \strng{authorbibnamehash}{8617f23c7cb5a68eac15b876adc3af37}
       \strng{authornamehash}{8617f23c7cb5a68eac15b876adc3af37}
       \strng{authorfullhash}{8617f23c7cb5a68eac15b876adc3af37}
-      \field{sortinit}{6}
-      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://github.com/paulopacitti/ascon-v}}
@@ -258,8 +236,8 @@
       \strng{authorbibnamehash}{cef6094df745f1e9e3e80f072440318d}
       \strng{authornamehash}{cef6094df745f1e9e3e80f072440318d}
       \strng{authorfullhash}{e4f88604c833f7a1b35f9ed6c04ec83c}
-      \field{sortinit}{7}
-      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{journaltitle}{Cryptology ePrint Archive}
@@ -283,14 +261,36 @@
       \strng{authorbibnamehash}{1d0727230289450285f41dc3f4deb510}
       \strng{authornamehash}{1d0727230289450285f41dc3f4deb510}
       \strng{authorfullhash}{1d0727230289450285f41dc3f4deb510}
-      \field{sortinit}{8}
-      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{howpublished}{\url{https://github.com/riscv-collab/riscv-gnu-toolchain}}
       \field{journaltitle}{GitHub repository}
       \field{title}{riscv-gnu-toolchain: GNU toolchain for RISC-V, including GCC}
       \field{year}{2023}
+    \endentry
+    \entry{jellema2019optimizing}{article}{}
+      \name{author}{1}{}{%
+        {{hash=b91555c866ffabd2c4c88048da12141e}{%
+           family={Jellema},
+           familyi={J\bibinitperiod},
+           given={Lars},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{fullhash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{bibnamehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{authorbibnamehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{authornamehash}{b91555c866ffabd2c4c88048da12141e}
+      \strng{authorfullhash}{b91555c866ffabd2c4c88048da12141e}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Bachelor Thesis, Radboud University}
+      \field{title}{Optimizing ascon on RISC-V}
+      \field{year}{2019}
     \endentry
     \entry{10179399}{inproceedings}{}
       \name{author}{4}{}{%
@@ -321,8 +321,8 @@
       \strng{authorbibnamehash}{9a496bcc19528c1246cbe476a545f119}
       \strng{authornamehash}{9a496bcc19528c1246cbe476a545f119}
       \strng{authorfullhash}{b4a8e01915f7d279c23df9f3ee9abd5a}
-      \field{sortinit}{1}
-      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
       \field{labelnamesource}{author}
       \field{labeltitlesource}{title}
       \field{booktitle}{2023 IEEE Symposium on Security and Privacy (SP)}
