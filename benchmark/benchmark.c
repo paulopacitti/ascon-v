@@ -25,10 +25,24 @@ unsigned long long adlen = 16;
 unsigned long long clen;
 int result = 0;
 
-static inline uint64_t rdtime() {
-    uint64_t cycle;
+static inline unsigned long long rdtime() {
+    unsigned long long cycle;
     asm volatile("rdtime %0" : "=r"(cycle));
     return cycle;
+}
+
+int uint64_cmp(const void *a, const void *b) {
+    unsigned long long *x = (unsigned long long *) a;
+    unsigned long long *y = (unsigned long long *) b;
+    return (int) (*x - *y);
+}
+
+int my_ceil(double num) {
+    int inum = (int) num;
+    if (num == (float) inum) {
+        return inum;
+    }
+    return inum + 1;
 }
 
 static inline void init_buffer(unsigned char *buffer,
@@ -45,6 +59,12 @@ unsigned long long average_time_elapsed(unsigned long long *time_counts,
         sum += time_counts[i];
     }
     return (sum / len) * RESOLUTION;
+}
+
+unsigned long long median_time_elapsed(unsigned long long *time_counts,
+                                       int len) {
+    qsort(time_counts, len, sizeof(unsigned long long), uint64_cmp);
+    return time_counts[len / 2] * RESOLUTION;
 }
 
 unsigned clock_count(unsigned long long time_ns) {
@@ -83,7 +103,7 @@ void benchmark_encryption(int method, unsigned long long *time,
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
 
-        time_elapsed = average_time_elapsed(time_counts, ITERATIONS);
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
         *time = time_elapsed;
         *cycles = clock_count(time_elapsed);
 
@@ -98,7 +118,7 @@ void benchmark_encryption(int method, unsigned long long *time,
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
 
-        time_elapsed = average_time_elapsed(time_counts, ITERATIONS);
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
         *time = time_elapsed;
         *cycles = clock_count(time_elapsed);
 
@@ -110,7 +130,7 @@ void benchmark_encryption(int method, unsigned long long *time,
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
-        time_elapsed = average_time_elapsed(time_counts, ITERATIONS);
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
         *time = time_elapsed;
         *cycles = clock_count(time_elapsed);
         return;
@@ -133,7 +153,7 @@ void benchmark_decryption(int method, unsigned long long *time,
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
-        time_elapsed = average_time_elapsed(time_counts, ITERATIONS);
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
         *time = time_elapsed;
         *cycles = clock_count(time_elapsed);
 
@@ -146,7 +166,7 @@ void benchmark_decryption(int method, unsigned long long *time,
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
-        time_elapsed = average_time_elapsed(time_counts, ITERATIONS);
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
         *time = time_elapsed;
         *cycles = clock_count(time_elapsed);
 
@@ -159,7 +179,7 @@ void benchmark_decryption(int method, unsigned long long *time,
             ref_timer_end = rdtime();
             time_counts[i] = ref_timer_end - ref_timer_start;
         }
-        time_elapsed = average_time_elapsed(time_counts, ITERATIONS);
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
         *time = time_elapsed;
         *cycles = clock_count(time_elapsed);
         return;
@@ -223,33 +243,39 @@ int main() {
         printf("%-15s%-20d%-12s%-18s%-10u%-15u%-10.9f\n", "Ascon128",
                message_sizes[i], "encryption", "reference",
                encryption_ref_cycles[i],
-               encryption_ref_cycles[i] / message_sizes[i],
+               ((int) my_ceil(((double) encryption_ref_cycles[i] /
+                               (double) message_sizes[i]))),
                encryption_ref_time_ns[i] * NS);
         printf("%-15s%-20d%-12s%-18s%-10u%-15u%-10.9f\n", "Ascon128",
                message_sizes[i], "encryption", "opt64",
                encryption_opt64_cycles[i],
-               encryption_opt64_cycles[i] / message_sizes[i],
+               ((int) my_ceil(((double) encryption_opt64_cycles[i] /
+                               (double) message_sizes[i]))),
                encryption_opt64_time_ns[i] * NS);
         printf("%-15s%-20d%-12s%-18s%-10u%-15u%-10.9f\n", "Ascon128",
                message_sizes[i], "encryption", "asconv",
                encryption_asconv_cycles[i],
-               encryption_asconv_cycles[i] / message_sizes[i],
+               ((int) my_ceil(((double) encryption_asconv_cycles[i] /
+                               (double) message_sizes[i]))),
                encryption_asconv_time_ns[i] * NS);
 
         printf("%-15s%-20d%-12s%-18s%-10u%-15u%-10.9f\n", "Ascon128",
                message_sizes[i], "decryption", "reference",
                decryption_ref_cycles[i],
-               decryption_ref_cycles[i] / message_sizes[i],
+               ((int) my_ceil(((double) decryption_ref_cycles[i] /
+                               (double) message_sizes[i]))),
                decryption_ref_time_ns[i] * NS);
         printf("%-15s%-20d%-12s%-18s%-10u%-15u%-10.9f\n", "Ascon128",
                message_sizes[i], "decryption", "opt64",
                decryption_opt64_cycles[i],
-               decryption_opt64_cycles[i] / message_sizes[i],
+               ((int) my_ceil(((double) decryption_opt64_cycles[i] /
+                               (double) message_sizes[i]))),
                decryption_opt64_time_ns[i] * NS);
         printf("%-15s%-20d%-12s%-18s%-10u%-15u%-10.9f\n", "Ascon128",
                message_sizes[i], "decryption", "asconv",
                decryption_opt64_cycles[i],
-               decryption_asconv_cycles[i] / message_sizes[i],
+               ((int) my_ceil(((double) decryption_asconv_cycles[i] /
+                               (double) message_sizes[i]))),
                decryption_asconv_time_ns[i] * NS);
     }
     printf("___________________________________________________________________"

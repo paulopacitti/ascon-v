@@ -250,9 +250,9 @@ The CPU time was measure using the RISC-V instruction \texttt{rdtime}, which is 
 
     \texttt{asconv}         & 8                         & 66                & 9 & 0.000003960 \\ \hline
 
-    \texttt{asconv}         & 32                        & 96                & 3 & 0.000005805 \\ \hline
+    \texttt{asconv}         & 32                        & 89                & 3 & 0.000005355 \\ \hline
 
-    \texttt{asconv}         & 64                        & 123               & 1 & 0.000007380 \\ \hline
+    \texttt{asconv}         & 64                        & 120               & 2 & 0.000007245 \\ \hline
   \end{tabular}
   \caption{Benchmark of \texttt{asconv} implementation of \textsc{Ascon-128} of the encryption operation with different message sizes.}
   \label{table:asconvEncryptionBenchmark}
@@ -265,17 +265,17 @@ The CPU time was measure using the RISC-V instruction \texttt{rdtime}, which is 
     \textbf{Implementation} & \textbf{Message size (B)} &
     \textbf{Cycles}         & \textbf{Cycles/B}         & \textbf{Time (s)}                   \\ \hline
 
-    \texttt{asconv}         & 8                         & 60                & 8 & 0.000004185 \\ \hline
+    \texttt{asconv}         & 8                         & 60                & 9 & 0.000004140 \\ \hline
 
-    \texttt{asconv}         & 32                        & 83                & 2 & 0.000005625 \\ \hline
+    \texttt{asconv}         & 32                        & 82                & 3 & 0.000005580 \\ \hline
 
-    \texttt{asconv}         & 64                        & 120               & 1 & 0.000007560 \\ \hline
+    \texttt{asconv}         & 64                        & 112               & 2 & 0.000007470 \\ \hline
   \end{tabular}
   \caption{Benchmark of \texttt{asconv} implementation of \textsc{Ascon-128} of the decryption operation with different message sizes.}
   \label{table:asconvDecryptionBenchmark}
 \end{table}
 
-\cref{table:relativeBenchmark} shows the benchmark of the \texttt{asconv} implementation of \textsc{Ascon-128} when compared \texttt{ref} \texttt{opt64} implementations, a message of 4 MB. The \texttt{asconv} implementation is 11\% faster than the \texttt{ref} implementation when encrypting and 12\% faster when decrypting. Still, the \texttt{opt64} is the fastest implementation, being 16\% faster than the \texttt{ref} implementation when encrypting and 18\% faster when decrypting, placing \texttt{asconv} in the middle of the \texttt{ref} and \texttt{opt64} implementations.
+The benchmark displayed in \cref{table:relativeBenchmark} compares the \texttt{asconv} implementation of \textsc{Ascon-128} with \texttt{ref} and \texttt{opt64} implementations, using a message of 4 MB. The \texttt{asconv} implementation is 11\% faster than the \texttt{ref} implementation when encrypting and 10\% faster when decrypting. Still, the \texttt{opt64} is the fastest implementation, being 16\% faster than the \texttt{ref} implementation when encrypting and 18\% faster when decrypting, placing \texttt{asconv} in the middle of the \texttt{ref} and \texttt{opt64} implementations.
 
 \begin{table}[h]
   \centering
@@ -284,11 +284,11 @@ The CPU time was measure using the RISC-V instruction \texttt{rdtime}, which is 
     \textbf{Implementation} & \textbf{Encrypt cycles} &
     \textbf{Decrypt cycles} & \textbf{Encrypt speed}  & \textbf{Decrypt speed}               \\ \hline
 
-    \texttt{ref}            & 4533                    & 4603                   & 1.00 & 1.00 \\ \hline
+    \texttt{ref}            & 4417                    & 4431                   & 1.00 & 1.00 \\ \hline
 
-    \texttt{opt64}          & 3912                    & 3917                   & 1.16 & 1.18 \\ \hline
+    \texttt{opt64}          & 3819                    & 3820                   & 1.16 & 1.16 \\ \hline
 
-    \texttt{asconv}         & 4078                    & 4093                   & 1.11 & 1.12 \\ \hline
+    \texttt{asconv}         & 3996                    & 4016                   & 1.11 & 1.10 \\ \hline
   \end{tabular}
   \caption{Comparison and relative speeds of different implementations of \textsc{Ascon-128} when compared with the reference implementation (\texttt{ref}). The benchmark was done considering a message of 4 MB.}
   \label{table:relativeBenchmark}
