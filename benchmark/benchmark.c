@@ -1,3 +1,4 @@
+#include "../lib/debug.h"
 #include "../opt64/crypto_aead.h"
 #include "../ref/crypto_aead.h"
 #include "../src/asconv.h"
@@ -24,12 +25,6 @@ unsigned long long mlen = 1000;
 unsigned long long adlen = 16;
 unsigned long long clen;
 int result = 0;
-
-static inline unsigned long long rdtime() {
-    unsigned long long cycle;
-    asm volatile("rdtime %0" : "=r"(cycle));
-    return cycle;
-}
 
 int uint64_cmp(const void *a, const void *b) {
     unsigned long long *x = (unsigned long long *) a;
@@ -67,8 +62,8 @@ unsigned long long median_time_elapsed(unsigned long long *time_counts,
     return time_counts[len / 2] * RESOLUTION;
 }
 
-unsigned clock_count(unsigned long long time_ns) {
-    return (unsigned int) (((time_ns * NS) / 60) * FREQUENCY);
+unsigned int clock_count(unsigned long long time_ns) {
+    return (unsigned int) my_ceil((((double) (time_ns * NS)) / 60) * FREQUENCY);
 }
 
 void benchmark_restart(unsigned long long message_length,
@@ -133,6 +128,7 @@ void benchmark_encryption(int method, unsigned long long *time,
         time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
         *time = time_elapsed;
         *cycles = clock_count(time_elapsed);
+
         return;
     }
 }
@@ -186,6 +182,57 @@ void benchmark_decryption(int method, unsigned long long *time,
     }
 }
 
+void benchmark_decryption_final_ciphertext_stage(int method,
+                                                 unsigned long long *time,
+                                                 unsigned int *cycles) {
+    unsigned long long time_counts[ITERATIONS];
+    unsigned long long time_elapsed;
+    unsigned long long timer;
+
+    switch (method) {
+    case REFERENCE_IMPLEMENTATION:
+        for (int i = 0; i < ITERATIONS; i++) {
+            crypto_aead_decrypt_debug(decrypted_msg, &decrypted_mlen, NULL, ct,
+                                      clen, ad, adlen, nonce, key, &timer);
+            time_counts[i] = timer;
+        }
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
+        *time = time_elapsed;
+        *cycles = clock_count(time_elapsed);
+        // printf("cycles: %u\n", *cycles);
+        // printf("time: %llu\n", *time);
+
+        return;
+    case OPT64_IMPLEMENTATION:
+        for (int i = 0; i < ITERATIONS; i++) {
+            crypto_aead_decrypt_opt64_debug(decrypted_msg, &decrypted_mlen,
+                                            NULL, ct, clen, ad, adlen, nonce,
+                                            key, &timer);
+            time_counts[i] = timer;
+        }
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
+        *time = time_elapsed;
+        *cycles = clock_count(time_elapsed);
+        // printf("cycles: %u\n", *cycles);
+        // printf("time: %llu\n", *time);
+
+        return;
+    case ASCONV_IMPLEMENTATION:
+        for (int i = 0; i < ITERATIONS; i++) {
+            ascon128_decrypt_debug(decrypted_msg, &decrypted_mlen, ct, clen, ad,
+                                   adlen, key, nonce, &timer);
+            time_counts[i] = timer;
+        }
+        time_elapsed = median_time_elapsed(time_counts, ITERATIONS);
+        *time = time_elapsed;
+        *cycles = clock_count(time_elapsed);
+        // printf("cycles: %u\n", *cycles);
+        // printf("time: %llu\n", *time);
+
+        return;
+    }
+}
+
 int main() {
     int message_sizes[5] = {8, 32, 64, 1000, 4000};
     unsigned long long encryption_ref_time_ns[5];
@@ -197,10 +244,18 @@ int main() {
 
     unsigned long long decryption_ref_time_ns[5];
     unsigned int decryption_ref_cycles[5];
+    unsigned long long decryption_ref_final_ciphertext_stage_ns[5];
+    unsigned int decryption_ref_final_ciphertext_stage_cycles[5];
+
     unsigned long long decryption_opt64_time_ns[5];
     unsigned int decryption_opt64_cycles[5];
+    unsigned long long decryption_opt64_final_ciphertext_stage_ns[5];
+    unsigned int decryption_opt64_final_ciphertext_stage_cycles[5];
+
     unsigned long long decryption_asconv_time_ns[5];
     unsigned int decryption_asconv_cycles[5];
+    unsigned long long decryption_asconv_final_ciphertext_stage_ns[5];
+    unsigned int decryption_asconv_final_ciphertext_stage_cycles[5];
 
     msg = malloc(sizeof(unsigned char));
     ad = malloc(sizeof(unsigned char));
@@ -208,28 +263,39 @@ int main() {
     decrypted_msg = malloc(sizeof(unsigned char));
 
     for (int i = 0; i < 5; i++) {
+        // ref implementation
         benchmark_restart(message_sizes[i], 16);
         benchmark_encryption(REFERENCE_IMPLEMENTATION,
                              &encryption_ref_time_ns[i],
                              &encryption_ref_cycles[i]);
+        benchmark_decryption(REFERENCE_IMPLEMENTATION,
+                             &decryption_ref_time_ns[i],
+                             &decryption_ref_cycles[i]);
+        benchmark_decryption_final_ciphertext_stage(
+            REFERENCE_IMPLEMENTATION, decryption_ref_final_ciphertext_stage_ns,
+            decryption_ref_final_ciphertext_stage_cycles);
+
+        // opt64 implementation
         benchmark_restart(message_sizes[i], 16);
         benchmark_encryption(OPT64_IMPLEMENTATION, &encryption_opt64_time_ns[i],
                              &encryption_opt64_cycles[i]);
+        benchmark_decryption(OPT64_IMPLEMENTATION, &decryption_opt64_time_ns[i],
+                             &decryption_opt64_cycles[i]);
+        benchmark_decryption_final_ciphertext_stage(
+            OPT64_IMPLEMENTATION, decryption_opt64_final_ciphertext_stage_ns,
+            decryption_opt64_final_ciphertext_stage_cycles);
+
+        // asconv implementation
         benchmark_restart(message_sizes[i], 16);
         benchmark_encryption(ASCONV_IMPLEMENTATION,
                              &encryption_asconv_time_ns[i],
                              &encryption_asconv_cycles[i]);
-        benchmark_restart(message_sizes[i], 16);
-        benchmark_decryption(REFERENCE_IMPLEMENTATION,
-                             &decryption_ref_time_ns[i],
-                             &decryption_ref_cycles[i]);
-        benchmark_restart(message_sizes[i], 16);
-        benchmark_decryption(OPT64_IMPLEMENTATION, &decryption_opt64_time_ns[i],
-                             &decryption_opt64_cycles[i]);
-        benchmark_restart(message_sizes[i], 16);
         benchmark_decryption(ASCONV_IMPLEMENTATION,
                              &decryption_asconv_time_ns[i],
                              &decryption_asconv_cycles[i]);
+        benchmark_decryption_final_ciphertext_stage(
+            ASCONV_IMPLEMENTATION, decryption_asconv_final_ciphertext_stage_ns,
+            decryption_asconv_final_ciphertext_stage_cycles);
     }
 
     /* Performance table */
@@ -273,7 +339,7 @@ int main() {
                decryption_opt64_time_ns[i] * NS);
         printf("%-15s%-20d%-12s%-18s%-10u%-15u%-10.9f\n", "Ascon128",
                message_sizes[i], "decryption", "asconv",
-               decryption_opt64_cycles[i],
+               decryption_asconv_cycles[i],
                ((int) my_ceil(((double) decryption_asconv_cycles[i] /
                                (double) message_sizes[i]))),
                decryption_asconv_time_ns[i] * NS);
@@ -307,6 +373,33 @@ int main() {
                     (float) encryption_asconv_cycles[4]),
            (float) ((float) decryption_ref_cycles[4] /
                     (float) decryption_asconv_cycles[4]));
+    printf("___________________________________________________________________"
+           "__________________________________\n");
+
+    printf("Final ciphertext stage operation comperison (with a message size "
+           "of 4MB):\n");
+    printf("___________________________________________________________________"
+           "__________________________________\n");
+
+    printf("%-20s%-20s%-20s%-20s\n", "[Implementation]", "[Decrypt (cycles)]",
+           "[Decrypt (time)]", "[Decrypt (speed)]");
+    printf("%-20s%-20u%-20.9f%-20.2f\n", "reference",
+           decryption_ref_final_ciphertext_stage_cycles[4],
+           decryption_ref_final_ciphertext_stage_ns[4] * NS,
+           (float) ((float) decryption_ref_final_ciphertext_stage_cycles[4] /
+                    (float) decryption_ref_final_ciphertext_stage_cycles[4]));
+    printf("%-20s%-20u%-20.9f%-20.2f\n", "opt64",
+           decryption_opt64_final_ciphertext_stage_cycles[4],
+           decryption_opt64_final_ciphertext_stage_ns[4] * NS,
+           (float) ((float) decryption_ref_final_ciphertext_stage_cycles[4] /
+                    (float) decryption_opt64_final_ciphertext_stage_cycles[4]));
+    printf(
+        "%-20s%-20u%-20.9f%-20.2f\n", "asconv",
+        decryption_asconv_final_ciphertext_stage_cycles[4],
+        decryption_asconv_final_ciphertext_stage_ns[4] * NS,
+        (float) ((float) decryption_ref_final_ciphertext_stage_cycles[4] /
+                 (float) decryption_asconv_final_ciphertext_stage_cycles[4]));
+
     printf("___________________________________________________________________"
            "__________________________________\n");
 

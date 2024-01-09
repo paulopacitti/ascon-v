@@ -66,6 +66,12 @@ int ascon128_decrypt(unsigned char *m, unsigned long long *mlen,
                      const unsigned char *ad, unsigned long long adlen,
                      const unsigned char *k, const unsigned char *n);
 
+int ascon128_decrypt_debug(unsigned char *m, unsigned long long *mlen,
+                           const unsigned char *c, unsigned long long clen,
+                           const unsigned char *ad, unsigned long long adlen,
+                           const unsigned char *k, const unsigned char *n,
+                           unsigned long long *timer);
+
 /* inline implementations */
 static inline uint64_t LOADBYTES(const uint8_t *bytes, uint8_t n) {
     uint64_t x_little_endian = 0;
