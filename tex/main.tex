@@ -38,7 +38,7 @@
 \TRYear{23} % Dois dígitos
 \TRMonth{12} % Numérico, 01-12
 \TRAuthor{Paulo Pacitti \and Julio López}
-\TRTitle{Software implementation of Ascon on the 64-bit RISC-V Allwinner D1 processor}
+\TRTitle{Ascon on 64-bit RISC-V: Software implementation in the Allwinner D1 processor}
 \TRMakeCover
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,7 +54,7 @@
 % Nomes de autores ABREVIADOS e titulo ABREVIADO,
 % para cabeçalhos em cada página.
 %
-\markboth{Pacitti, López}{Software implementation of Ascon on the 64-bit RISC-V Allwinner D1 processor}
+\markboth{Pacitti, López}{Ascon on 64-bit RISC-V: Software implementation in the Allwinner D1 processor}
 \pagestyle{myheadings}
 \thispagestyle{empty}
 
@@ -62,7 +62,7 @@
 % TÍTULO e NOMES DOS AUTORES, completos, para a página 1.
 % Use "\\" para quebrar linhas, "\and" para separar autores.
 %
-\title{Software implementation of Ascon on \\ the 64-bit RISC-V Allwinner D1 processor}
+\title{Ascon on 64-bit RISC-V: \\ Software implementation in the Allwinner D1 processor}
 
 \author{Paulo Pacitti\thanks{Institute of Computing, UNICAMP. \texttt{p185447@dac.unicamp.br}} \and
   Julio  López\thanks{Associate Professor, Institute of Computing, UNICAMP. \texttt{jlopez@ic.unicamp.br}}}
@@ -214,14 +214,14 @@ Since it's a 64-bit architecture, it's possible to store each of the five 64-bit
 
 Ascon words, used to maintain the state in the sponge construct, are big endian. However, RISC-V, as like most other ISAs, is little endian, making bitwise operations slower than it could be if the architecture had the same endianness as the algorithm. The reference implementation merges data to these words by loading and storing bytes using big-endian, requiring operations to fill the right-side with zeros. It's possible to implement an optimization considering this issue by handling the data as little-endian in the implementation and reversing the endianness when merging data to the Ascon words \cite{jellema2019optimizing}. This turns out to be way more effective than manipulating data in big-endian, since loading bytes and other bitwise operations does not need to fill the right-side of the bit string with zeros, as it is in big-endian. That way, the cost of reversing the endianness of a little-endian 64-bit bit string is lower than the cost of loading data in big-endian.
 
-Another minor improvement is done in the finalization of the ciphertext processing, in the decryption procedure. After retrieving the last section of the deciphered plaintext, the algorithm specification defines \cref{eq:2} and \cref{eq:3} where  $\tilde{P_t}$ is the last piece of plaintext, $S_r$ is the first $r$ bits of the Ascon state, $\tilde{C_t}$ is the last piece of ciphertext, and $0^*$ is a bit string of zeros until the concatenated bit string $\tilde{P_t}||1||0$ reaches $r$ bits:
+Another improvement is done in the finalization of the ciphertext processing, in the decryption procedure, an hypothesis conceive during this research. After retrieving the last section of the deciphered plaintext, the algorithm specification defines \cref{eq:2} and \cref{eq:3} where  $\tilde{P_t}$ is the last piece of plaintext, $S_r$ is the first $r$ bits of the Ascon state, $\tilde{C_t}$ is the last piece of ciphertext, and $0^*$ is a bit string of zeros until the concatenated bit string $\tilde{P_t}||1||0$ reaches $r$ bits:
 
 \begin{align}
    & \tilde{P_{t}} \leftarrow  {\left \lfloor S_{r}  \right \rfloor}_{\left| \tilde{C_{t}} \right|} \oplus \tilde{C_{t}} \label{eq:2} \\
    & S_r \leftarrow S_r \oplus (\tilde{P_{t}} || 1 || 0^{*}) \label{eq:3}
 \end{align}
 
-The \texttt{ref} and \texttt{opt64} implementations do this operation by cleaning the first (in big-endian representation) $| \tilde{C_{t}} |$ bytes of $S_r$, ORing with $\tilde{C_t}$ to load these bytes into $S_r$, and then XORing with a padded bit string. Since $S_r \oplus \tilde{P_t} = S_r \oplus  ({\left \lfloor S_{r}  \right \rfloor}_{\left| \tilde{C_{t}} \right|} \oplus \tilde{C_{t}})$ is equivalent to $S_{r} \ | \; \tilde{C_t}$, after the first $| \tilde{C_{t}} |$ bytes of $S_r$ are cleared, the approach that the reference implementation takes is compliant with the specification. In \texttt{asconv}, in the purpose of trying to improve the performance, the operations done in \cref{eq:2} and \cref{eq:3} are done with bitwise shift instructions, as it's displayed in \cref{eq:4} and \cref{eq:5}:
+The \texttt{ref} and \texttt{opt64} implementations do this operation by cleaning the first (in big-endian representation) $| \tilde{C_{t}} |$ bytes of $S_r$, ORing with $\tilde{C_t}$ to load these bytes into $S_r$, and then XORing with a padded bit string. The load is made with \texttt{memcpy}, which adds time to the execution of the algorithm since a memory read is being done. Since $S_r \oplus \tilde{P_t} = S_r \oplus  ({\left \lfloor S_{r}  \right \rfloor}_{\left| \tilde{C_{t}} \right|} \oplus \tilde{C_{t}})$ is equivalent to $S_{r} \ | \; \tilde{C_t}$, after the first $| \tilde{C_{t}} |$ bytes of $S_r$ are cleared, the approach that the reference implementation takes is compliant with the specification. In \texttt{asconv}, in the purpose of trying to improve the performance, the operations done in \cref{eq:2} and \cref{eq:3} are done with bitwise shift instructions, as it's displayed in \cref{eq:4} and \cref{eq:5}:
 
 \begin{align}
    & d \leftarrow (S_r \oplus \tilde{C_{t}}) \gg (r - | \tilde{C_{t}}|) \ll (r - | \tilde{C_{t}} |) \ | \ (1||0^*) \label{eq:4} \\
@@ -294,9 +294,11 @@ The benchmark displayed in \cref{table:relativeBenchmark} compares the \texttt{a
   \label{table:relativeBenchmark}
 \end{table}
 
+Due to \texttt{asconv} not containing all the optimizations of the \texttt{opt64} implementation and the resolution of the \texttt{rdtime} being not large enough to test only a few instructions, the shift-register optimization on the finalization of the decryption algorithm couldn't be benchmarked. That way, it's not possible to know if the hypothesis of the optimization is correct, and, if it is, how much it would improve the performance of the algorithm. Still, the shift-register technique implemented in the \texttt{asconv} can be a greater opportunity for improvement in the performance of the algorithm in future works.
+
 \section{Conclusions}
 
-As seen in \cref{section:results}, the \textsf{RV64GC} instructions do not allow great optimizations from the architecture itself, since it does not have any special instructions to accelerate operations of the \textsc{Ascon-128}.
+As seen in \cref{section:results}, the \textsf{RV64GC} instructions do not allow great optimizations from the architecture itself, since it does not have any special instructions to accelerate operations of the \textsc{Ascon-128}. However, the implementation done in this research could provide some insights for future works, like the 64-bit RISC-V constraints and benefits when implementing cryptographic algorithms and the use of the shift-register technique in the finalization of the decryption algorithm, that could improve the performance of the algorithm.
 
 The Ascon permutation proposed in the specification, shown in \cref{lst:1}, also allows the use of parallelism that could accelerate the performance. Unfortunately, the Allwinner D1 lacks support for vectorial instructions and the XuanTie C906 microarchitecture is single-issue only, so the analysis of the use of parallelism for increasing the algorithm performance will be left for future work.
 
