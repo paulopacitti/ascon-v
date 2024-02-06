@@ -38,7 +38,7 @@
 \TRYear{23} % Dois dígitos
 \TRMonth{12} % Numérico, 01-12
 \TRAuthor{Paulo Pacitti \and Julio López}
-\TRTitle{Ascon on 64-bit RISC-V: Software implementation in the Allwinner D1 processor}
+\TRTitle{Ascon on 64-bit RISC-V: Software implementation on the Allwinner D1 processor}
 \TRMakeCover
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -54,7 +54,7 @@
 % Nomes de autores ABREVIADOS e titulo ABREVIADO,
 % para cabeçalhos em cada página.
 %
-\markboth{Pacitti, López}{Ascon on 64-bit RISC-V: Software implementation in the Allwinner D1 processor}
+\markboth{Pacitti, López}{Ascon on 64-bit RISC-V: Software implementation on the Allwinner D1 processor}
 \pagestyle{myheadings}
 \thispagestyle{empty}
 
@@ -62,7 +62,7 @@
 % TÍTULO e NOMES DOS AUTORES, completos, para a página 1.
 % Use "\\" para quebrar linhas, "\and" para separar autores.
 %
-\title{Ascon on 64-bit RISC-V: \\ Software implementation in the Allwinner D1 processor}
+\title{Ascon on 64-bit RISC-V: \\ Software implementation on the Allwinner D1 processor}
 
 \author{Paulo Pacitti\thanks{Institute of Computing, UNICAMP. \texttt{p185447@dac.unicamp.br}} \and
   Julio  López\thanks{Associate Professor, Institute of Computing, UNICAMP. \texttt{jlopez@ic.unicamp.br}}}
@@ -72,7 +72,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
-  RISC-V is a promising ISA and soon will be the architecture of many chips, specially embedded systems. It's necessary to guarantee that applications that run in systems designed with RISC-V will be at the same time secure and cryptographically fast. The NIST Lightweight Cryptography competition selected the finalist: Ascon, a family of cryptography algorithms designed to run in devices with low computational power. This research explores the Ascon family of algorithms in the RISC-V 64-bit architecture, analysing the Ascon permutation and the Ascon-128 algorithm, and whether it's possible to optimize it for \texttt{riscv64}, proposing a new technique regarding the decryption implementation. The results show that the proposed optimizations, developed during the limited time given to this research, were not enough to overcome all the implementations that were benchmarked. Finally, it's discussed that new microarchitectures, and, the future of the RISC-V ISA with new instructions extensions recently ratified, could improve the performance of the Ascon family of algorithms and other cryptographic algorithms.
+  RISC-V is a promising ISA and soon will be the architecture of many chips, specially embedded systems. It's necessary to guarantee that applications that run in systems designed with RISC-V will be at the same time secure and cryptographically fast. The NIST Lightweight Cryptography competition selected the finalist: Ascon, a family of cryptography algorithms designed to run in devices with low computational power. This research explores the Ascon family of algorithms on the RISC-V 64-bit architecture, analysing the Ascon permutation and the Ascon-128 algorithm, and whether it's possible to optimize it for \texttt{riscv64}, proposing a new technique regarding the decryption implementation. The implementation developed in this research was benchmarked in the Allwinner D1 chip, a RISC-V 64-bit 1 GHz single-issue CPU supporting the RV64GC ISA, and compared with other implementations. Finally, it's discussed that new microarchitectures, and, the future of the RISC-V ISA with new instructions extensions recently ratified, could improve the performance of the Ascon family of algorithms and other cryptographic algorithms.
 \end{abstract}
 
 \section{Introduction}
@@ -84,7 +84,7 @@ The approach was to analyse the Ascon algorithm design for three different imple
 
 Ascon is a family of algorithms for lightweight cryptography, designed to be used in constrained environments, like embedding computing. Designed by cryptographers from Graz University of Technology, Infineon Technologies, Intel Labs, and Radboud University, Ascon has been selected as the new standard for lightweight cryptography in the 2019–2023 NIST Lightweight Cryptography competition. The Ascon family is mainly composed by 4 algorithms: \textsc{Ascon-128}, \textsc{Ascon-128a}, \textsc{Ascon-Hash} and \textsc{Ascon-Hasha}. There's also variants \textsc{Ascon-80pq}, \textsc{Ascon-Xof}, \textsc{Ascon-Xofa}, where the first it's a version of AEAD with an increased key size of 160 bits and the latter two are versions of the hash algorithm, but they produce hash outputs of arbitrary length.
 
-The \cref{table:aeadParameters} shows the parameters of the recommended AEAD schemes from the Ascon family of algorithms, where this work will focus on the \textsc{Ascon-128}. The algorithms use the encryption function $\textit{E}_{k,r,a,b}$ and the decryption function $\textit{D}_{k,r,a,b}$ where $k$ is the key size, $r$ is the rate (data block) size, $a$ and $b$ are the number of rounds used in $p^a$ and $p^b$ permutations used across the algorithms. The encryption $\textit{E}_{k,r,a,b}(K, A, N, P) = (C, T)$ receives a key $K$, an associated data $A$, a nonce $N$ and a plaintext $P$ and returns a ciphertext $C$ and a tag $T$. The decryption $\textit{D}_{k,r,a,b}(K, A, N, C, T) \in \{P, \perp\}$ receives a key $K$, an associated data $A$, a nonce $N$, a ciphertext $C$ and a tag $T$ and returns the plaintext $P$ if the verification of the tag is correct, otherwise it returns the $\perp$ error.
+\cref{table:aeadParameters} shows the parameters of the recommended AEAD schemes from the Ascon family of algorithms, where this work will focus on the \textsc{Ascon-128}. The algorithms use the encryption function $\textit{E}_{k,r,a,b}$ and the decryption function $\textit{D}_{k,r,a,b}$ where $k$ is the key size, $r$ is the rate (data block) size, $a$ and $b$ are the number of rounds used in $p^a$ and $p^b$ permutations used across the algorithms. The encryption $\textit{E}_{k,r,a,b}(K, A, N, P) = (C, T)$ receives a key $K$, an associated data $A$, a nonce $N$ and a plaintext $P$ and returns a ciphertext $C$ and a tag $T$. The decryption $\textit{D}_{k,r,a,b}(K, A, N, C, T) \in \{P, \perp\}$ receives a key $K$, an associated data $A$, a nonce $N$, a ciphertext $C$ and a tag $T$ and returns the plaintext $P$ if the verification of the tag is correct, otherwise it returns the $\perp$ error.
 
 \begin{table} [h]
   \centering
@@ -104,7 +104,7 @@ Ascon lightweight properties comes from using the simple bitwise operations that
 
 The Ascon permutation is the main building block of the Ascon family of algorithms and consists in 3 stages: round constant addition, a substitution-layer (S-Box) and a linear diffusion layer. It's then used in the AEAD encryption and decryption procedures in the form of $p^a$ and $p^b$, where $p$ is the permutation and $a$ and $b$ are the number of rounds used in different stages of the algorithm. The parameters $a$ and $b$ are different for each algorithm of the Ascon family, but the permutation is the same for all of them, as it's displayed in \cref{table:aeadParameters}.
 
-As the Ascon state has five 64-bit words, the round constant addition consists in XORing the round constant with the third Ascon word. The round constant is a 64-bit value that is different for each round. The substitution-layer consists in applying an S-Box to the Ascon state. The 5-bit S-Box updates the state with 64 parallel applications of substitutions to the five Ascon words, as seen in \cref{fig:asconsbox}. The linear diffusion layer consists in the linear diffusion function $x_i \leftarrow \Sigma_i(x_i)$ applied to each Ascon word $x_i$, where each word has a specific function definition $\Sigma_i(x_i)$. The linear diffusion function definitions are shown in \cref{fig:asconlineardiffusion}.
+As the Ascon state has five 64-bit words, the round constant addition consists in XORing the round constant with the third Ascon word. The round constant is a 64-bit value that is different for each round. The substitution-layer consists in applying an S-Box to the Ascon state. The 5-bit S-Box updates the state with 64 parallel applications of substitutions to the five Ascon words, as seen in \cref{fig:asconsbox}. The linear diffusion layer consists in the linear diffusion function $x_i \leftarrow \Sigma_i(x_i)$ applied to each Ascon word $x_i$, where each word has a specific function definition $\Sigma_i(x_i)$. The linear diffusion function is shown in \cref{fig:asconlineardiffusion}.
 
 \begin{figure}
   \centering
@@ -212,7 +212,7 @@ Since it's a 64-bit architecture, it's possible to store each of the five 64-bit
   \label{lst:1}
 \end{listing}
 
-Ascon words, used to maintain the state in the sponge construct, are big endian. However, RISC-V, as like most other ISAs, is little endian, making bitwise operations slower than it could be if the architecture had the same endianness as the algorithm. The reference implementation merges data to these words by loading and storing bytes using big-endian, requiring operations to fill the right-side with zeros. It's possible to implement an optimization considering this issue by handling the data as little-endian in the implementation and reversing the endianness when merging data to the Ascon words \cite{jellema2019optimizing}. This turns out to be way more effective than manipulating data in big-endian, since loading bytes and other bitwise operations does not need to fill the right-side of the bit string with zeros, as it is in big-endian. That way, the cost of reversing the endianness of a little-endian 64-bit bit string is lower than the cost of loading data in big-endian.
+The Ascon words, used to maintain the state in the sponge construct, are big endian. However, RISC-V, as like most other ISAs, is little endian, making bitwise operations slower than it could be if the architecture had the same endianness as the algorithm. The reference implementation merges data to these words by loading and storing bytes using big-endian, requiring operations to fill the right-side with zeros. It is possible to implement an optimization considering this issue by handling the data as little-endian in the implementation and reversing the endianness when merging data to the Ascon words \cite{jellema2019optimizing}. This turns out to be way more effective than manipulating data in big-endian, since loading bytes and other bitwise operations does not need to fill the right-side of the bit string with zeros, as it is in big-endian. That way, the cost of reversing the endianness of a little-endian 64-bit bit string is lower than the cost of loading data in big-endian.
 
 Another improvement is done in the finalization of the ciphertext processing, in the decryption procedure, an hypothesis conceive during this research. After retrieving the last section of the deciphered plaintext, the algorithm specification defines \cref{eq:2} and \cref{eq:3} where  $\tilde{P_t}$ is the last piece of plaintext, $S_r$ is the first $r$ bits of the Ascon state, $\tilde{C_t}$ is the last piece of ciphertext, and $0^*$ is a bit string of zeros until the concatenated bit string $\tilde{P_t}||1||0$ reaches $r$ bits:
 
@@ -239,7 +239,7 @@ All the implementations (\texttt{ref}, \texttt{opt64} and \texttt{asconv}) were 
   C = t \times R \times F \times \frac{10^{9}}{60} \label{eq:cycleCount}
 \end{equation}
 
-The CPU time was measure using the RISC-V instruction \texttt{rdtime}, which is read from a CSR register, and then used in \cref{eq:cycleCount} as $t$. The reason it was used \texttt{rdcycle} instead of \texttt{rdcycle} was that the current Ubuntu 23.04 version targeted for the Allwinner D1 chip, replaces the retrieved value with a constant one, not representing the actual cycle count. This might be due to security reasons to avoid malicious clock counting on side-channel attacks. In \cref{table:asconvEncryptionBenchmark} and \cref{table:asconvDecryptionBenchmark}, it's possible to see the benchmark of the \texttt{asconv} implementation of \textsc{Ascon-128} of the encryption and the decryption operations with progressively increasing message sizes. The cycle count per byte decays along with the message size, as expected.
+The CPU time was measure using the RISC-V instruction \texttt{rdtime}, which is read from a CSR register, and then used in \cref{eq:cycleCount} as $t$. The reason it was used \texttt{rdcycle} instead of \texttt{rdcycle} was that the current Ubuntu 23.04 version targeted for the Allwinner D1 chip, replaces the retrieved value with a constant one, not representing the actual cycle count. This might be due to security reasons to avoid malicious clock counting on side-channel attacks. In \cref{table:asconvEncryptionBenchmark} and \cref{table:asconvDecryptionBenchmark}, it is possible to see the benchmark of the \texttt{asconv} implementation of \textsc{Ascon-128} of the encryption and the decryption operations with progressively increasing message sizes. The cycle count per byte decays along with the message size, as expected.
 
 \begin{table}[h]
   \centering
@@ -294,7 +294,7 @@ The benchmark displayed in \cref{table:relativeBenchmark} compares the \texttt{a
   \label{table:relativeBenchmark}
 \end{table}
 
-Due to \texttt{asconv} not containing all the optimizations of the \texttt{opt64} implementation and the resolution of the \texttt{rdtime} being not large enough to test only a few instructions, the shift-register optimization on the finalization of the decryption algorithm in \cref{eq:4} couldn't be benchmarked. That way, it's not possible to know if the hypothesis of the optimization is correct, and, if it is, how much it would improve the performance of the algorithm. Still, the shift-register technique implemented in the \texttt{asconv} can be a greater opportunity for improvement in the performance of the algorithm in future works.
+Due to \texttt{asconv} not containing all the optimizations of the \texttt{opt64} implementation and the resolution of the \texttt{rdtime} being not large enough to test only a few instructions, the shift-register optimization on the finalization of the decryption algorithm in \cref{eq:4} couldn't be benchmarked. That way, it is not possible to know if the hypothesis of the optimization is correct, and, if it is, how much it would improve the performance of the algorithm. Still, the shift-register technique implemented in the \texttt{asconv} can be a greater opportunity for improvement in the performance of the algorithm in future works.
 
 \section{Conclusions}
 
