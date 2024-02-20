@@ -2,14 +2,12 @@
 @techreport{TR-IC-PFG-23-41,
   number      = {IC-PFG-23-41},
   author      = {Paulo Pacitti and Julio López},
-  title       = {{Lightweight Cryptography with Ascon in riscv64}},
+  title       = {{{Ascon on 64-bit RISC-V: Software implementation on the Allwinner D1 processor}},
   month       = {December},
   year        = {2023},
   institution = {Institute of Computing, University of Campinas},
   note        = {In English, 8 pages.
                  \par\selectlanguage{english}\textbf{Abstract}
-                 RISC-V is a promising ISA and soon will be the architecture of
-                 many chips, specially embedded systems. It's necessary to 
-                 guarantee that applications that run in systems designed with RISC-V will be at the same time secure and cryptographically fast. The NIST Lightweight Cryptography competition selected the finalist: Ascon, a family of cryptography algorithms designed to run in devices with low computational power. This research explores the Ascon family of algorithms in the RISC-V 64-bit architecture, analysing the Ascon permutation and the Ascon-128 algorithm, and whether it's possible to optimize it for \texttt{riscv64}, proposing a new technique regarding the decryption implementation. The results show that the proposed optimizations, developed during the limited time given to this research, were not enough to overcome all the implementations that were benchmarked. Finally, it's discussed that new microarchitectures, and, the future of the RISC-V ISA with new instructions extensions recently ratified, could improve the performance of the Ascon family of algorithms and other cryptographic algorithms.
+                 RISC-V is a promising ISA and soon will be the architecture of many chips, specially embedded systems. It's necessary to guarantee that applications that run in systems designed with RISC-V will be at the same time secure and cryptographically fast. The NIST Lightweight Cryptography competition selected the finalist: Ascon, a family of cryptography algorithms designed to run in devices with low computational power. This research explores the Ascon family of algorithms on the RISC-V 64-bit architecture, analysing the Ascon permutation and the Ascon-128 algorithm, and whether it's possible to optimize it for \texttt{riscv64}, proposing a new technique regarding the decryption implementation. The implementation developed in this research was benchmarked in the Allwinner D1 chip, a RISC-V 64-bit 1 GHz single-issue CPU supporting the RV64GC ISA, and compared with other implementations. Finally, it's discussed that new microarchitectures, and, the future of the RISC-V ISA with new instructions extensions recently ratified, could improve the performance of the Ascon family of algorithms and other cryptographic algorithms.
                  }
 }
